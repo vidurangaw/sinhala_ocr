@@ -1,11 +1,11 @@
 from flask import Flask, render_template, json, request,redirect,session,jsonify, url_for
-from flask.ext.mysql import MySQL
-from werkzeug import generate_password_hash, check_password_hash
+# from flask.ext.mysql import MySQL
+# from werkzeug import generate_password_hash, check_password_hash
 from werkzeug.wsgi import LimitedStream
 import uuid
 import os
 
-mysql = MySQL()
+# mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
 
@@ -14,7 +14,7 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'project'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+# mysql.init_app(app)
 
 # Default setting
 pageLimit = 5
@@ -43,9 +43,10 @@ app.wsgi_app = StreamConsumingMiddleware(app.wsgi_app)
 
 
 
-# @app.route('/')
-# def main():
-#     return render_template('index.html')
+@app.route('/')
+def showAddWish():
+    # print "ccc"
+    return render_template('index.html')
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -56,14 +57,8 @@ def upload():
     	file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
         return json.dumps({'filename':f_name})
 
-# @app.route('/showSignUp')
-# def showSignUp():
-#     return render_template('signup.html')
 
-@app.route('/')
-def showAddWish():
-    print "ccc"
-    return render_template('addWish.html')
+
 
 @app.route('/addWish',methods=['POST'])
 def addWish():
