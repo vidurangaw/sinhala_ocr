@@ -44,7 +44,7 @@ app.wsgi_app = StreamConsumingMiddleware(app.wsgi_app)
 
 
 @app.route('/')
-def showAddWish():
+def showIndex():
     # print "ccc"
     return render_template('index.html')
 
@@ -60,38 +60,11 @@ def upload():
 
 
 
-@app.route('/addWish',methods=['POST'])
+@app.route('/publish',methods=['POST'])
 def addWish():
+
     try:
-        #if session.get('user'):
-            _title = request.form['inputTitle']
-            _description = request.form['inputDescription']
-            _user = session.get('user')
-            if request.form.get('filePath') is None:
-                _filePath = ''
-            else:
-                _filePath = request.form.get('filePath')
-            if request.form.get('private') is None:
-                _private = 0
-            else:
-                _private = 1
-            if request.form.get('done') is None:
-                _done = 0
-            else:
-                _done = 1
-
-            print _title
-            print _description
-            #conn = mysql.connect()
-            #cursor = conn.cursor()
-            #cursor.callproc('sp_addWish',(_title,_description,_user,_filePath,_private,_done))
-            #data = cursor.fetchall()
-
-            if len(_title) > 0:
-                #conn.commit()
-                return redirect('/')
-            else:
-                return render_template('error.html',error = 'An error occurred!')
+        return render_template('result.html')
 
         #else:
             #return render_template('error.html',error = 'Unauthorized Access')
