@@ -247,14 +247,24 @@ class NeuralNetworkLearner(Orange.classification.Learner):
             nn.fit(X, Y)
 
 
-        # print errorArray
-        fig_ephs=plt.figure()
-        ax1=fig_ephs.add_subplot(111)
+        # # print errorArray
+        # fig_ephs=plt.figure()
+        # fig_ephs.suptitle("Epochs - Cost")
+        # ax1=fig_ephs.add_subplot(111)
         # ax1.plot(errorArray)
-        plt.ylabel('some numbers')
-
-        plt.savefig(os.path.join(package_directory,'test/foo')+str(randint(0,1000))+'.png')
+        # # fig_ephs.ylabel('some numbers')
+        #
+        # fig_ephs.savefig('test/foo'+str(randint(0,1000))+'.png')
         # plt.show()
+
+
+
+        plt.plot(errorArray, label='')
+        plt.legend(loc='upper left')
+
+
+
+
         del errorArray[:]
 
 

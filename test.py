@@ -20,6 +20,7 @@ image_bw, image_gray = segmenter.preprocess(image)
 lines = segmenter.segment_lines(image_bw)
 
 classified_text = ""
+
 for line in lines[:1]: 
 	character_images = segmenter.segment(line)
 

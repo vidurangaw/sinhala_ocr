@@ -9,7 +9,7 @@ import sys
 from scipy import signal
 from scipy.signal import argrelextrema
 from scipy.signal import savgol_filter
-from skimage import morphology
+# from skimage import morphology
 import math
 import itertools
 from PIL import Image, ImageDraw

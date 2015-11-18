@@ -1,11 +1,11 @@
 from flask import Flask, render_template, json, request,redirect,session,jsonify, url_for
-from flask.ext.mysql import MySQL
-from werkzeug import generate_password_hash, check_password_hash
+# from flask.ext.mysql import MySQL
+# from werkzeug import generate_password_hash, check_password_hash
 from werkzeug.wsgi import LimitedStream
 import uuid
 import os
 
-mysql = MySQL()
+# mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
 
@@ -14,7 +14,7 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'project'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+# mysql.init_app(app)
 
 # Default setting
 pageLimit = 5
@@ -43,9 +43,10 @@ app.wsgi_app = StreamConsumingMiddleware(app.wsgi_app)
 
 
 
-# @app.route('/')
-# def main():
-#     return render_template('index.html')
+@app.route('/')
+def showIndex():
+    # print "ccc"
+    return render_template('index.html')
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -56,47 +57,14 @@ def upload():
     	file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
         return json.dumps({'filename':f_name})
 
-# @app.route('/showSignUp')
-# def showSignUp():
-#     return render_template('signup.html')
 
-@app.route('/')
-def showAddWish():
-    print "ccc"
-    return render_template('addWish.html')
 
-@app.route('/addWish',methods=['POST'])
+
+@app.route('/publish',methods=['POST'])
 def addWish():
+
     try:
-        #if session.get('user'):
-            _title = request.form['inputTitle']
-            _description = request.form['inputDescription']
-            _user = session.get('user')
-            if request.form.get('filePath') is None:
-                _filePath = ''
-            else:
-                _filePath = request.form.get('filePath')
-            if request.form.get('private') is None:
-                _private = 0
-            else:
-                _private = 1
-            if request.form.get('done') is None:
-                _done = 0
-            else:
-                _done = 1
-
-            print _title
-            print _description
-            #conn = mysql.connect()
-            #cursor = conn.cursor()
-            #cursor.callproc('sp_addWish',(_title,_description,_user,_filePath,_private,_done))
-            #data = cursor.fetchall()
-
-            if len(_title) > 0:
-                #conn.commit()
-                return redirect('/')
-            else:
-                return render_template('error.html',error = 'An error occurred!')
+        return render_template('result.html')
 
         #else:
             #return render_template('error.html',error = 'Unauthorized Access')
