@@ -1,0 +1,8 @@
+-create a confusion matrix and other matrices graphs for three ANNs,
+        - tuning params and how to do it
+
+-feature extraction method, update it
+-lu-luu-training data, check mapper
+-training and testing times for different characters
+
+-classification accuracies for final output characters in a graph
