@@ -1,1 +1,3 @@
-static/uploads
+static/uploads/*
+classifier/test/*
+learner/test/*
