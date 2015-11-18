@@ -598,7 +598,7 @@ def segment(bw_):
     for j in range(len(words[i])):
       character_width = words[i][j][1] - words[i][j][0]
       cropped_character = bw[0:int(rows), int(words[i][j][0]):int(words[i][j][1])]
-      if average_char_width*170/100 > character_width and average_char_width*10/100 < character_width:      
+      if average_char_width*140/100 > character_width and average_char_width*10/100 < character_width:      
         print "single"
 
 
