@@ -1,8 +1,1 @@
-<<<<<<< HEAD
-static/uploads
 .idea
-=======
-static/uploads/*
-classifier/test/*
-learner/test/*
->>>>>>> refs/remotes/origin/master

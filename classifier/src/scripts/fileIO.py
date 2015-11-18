@@ -7,6 +7,8 @@ package_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.absp
 
 def write_tl_file(dataArray, dataString, fileName):
     file_ = os.path.join(package_directory, fileName)
+
+    print file_
     file = open(file_, "w")
     classAttributes="val\t"
     dataAttributes=""
