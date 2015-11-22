@@ -22,7 +22,9 @@ np.set_printoptions(threshold='nan')
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
-print package_directory
+# print package_directory
+
+
 def performance(char_matrix, char_time_matrix):
     for key,values in char_matrix.items():
         predicted = ""
