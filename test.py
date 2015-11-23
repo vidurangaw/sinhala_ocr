@@ -9,37 +9,29 @@ import corrector
 
 # input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලයa ඉහළන්  "
 
-# print corrector.correct(input_text)
-
-
 image = cv2.imread('ww.jpg')
 
-# CharReco2.tester_char(image)
-
 image_bw, image_gray = segmenter.preprocess(image)
+
 lines = segmenter.segment_lines(image_bw)
 
 classified_text = ""
 
-for line in lines[:1]: 
-	character_images = segmenter.segment(line)
-
+for i, line in enumerate(lines[:1]):
+	character_images = segmenter.segment_line(line, i)
 	for character_image in character_images:
 		if (character_image == np.array([0])).all():
 			classified_text += " "
-		else:
-			character_image_ = character_image.copy()
-  		
-			cv2.bitwise_not(character_image, character_image_)
+		else:		
+			#classified_text += classifier.classify(character_image)
+			classified_text += "2"				
 
-			classified_text += classifier.classify(character_image_)
-
-			#classified_text += "2"	
-			#print classified_text
+classified_text = classified_text.strip()
+classified_text = " ".join(classified_text.split())
 
 print "classified text : " + classified_text
 
 # corrected_text = corrector.correct(classified_text)
-# print "corrected text : " + corrected_text
+#print "corrected text : " + corrected_text
 
 # synthesized_voice = synthesizer.synthesize(corrected_text)
