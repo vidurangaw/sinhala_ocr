@@ -1,4 +1,3 @@
-#import segment
-from segment import *
-from line import *
-#from normalize import *
+from scripts.preprocessor import *
+from scripts.line import *
+from scripts.character import *
