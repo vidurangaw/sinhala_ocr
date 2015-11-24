@@ -31,7 +31,7 @@ def classify(img_, index):
     # for i in range(1, 3)
     if img_ is None:
                 # print "None"
-                return "None"
+                return ""
 
     if img_.any() == np.array([0]).all():
                 # print "space"
@@ -41,14 +41,16 @@ def classify(img_, index):
 
 
     else:
-        cv2.bitwise_not(img_,img_ )
+        img = img_.copy()
+
+        cv2.bitwise_not(img,img )
         #im = np.array(img * 255, dtype = np.uint8)
         #gray = np.array(img * 255, dtype = np.uint8)
 
         dataString_middle=""
         dataString_lower=""
         dataString_upper=""
-        img = img_.copy()
+
         character = img
         # print character
 
