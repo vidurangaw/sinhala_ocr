@@ -6,19 +6,25 @@ import os
 import numpy as np
 import segmenter
 import classifier
+import collections, itertools
 import corrector
 from classifier.src.mapper import character_position as char_pos
 import pickle
 
 # import synthesizer
 
-# input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලයa ඉහළන්  "
+from itertools import tee, islice, chain, izip
+
+def previous_and_next(some_iterable):
+    prevs, items, nexts = tee(some_iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+    return izip(prevs, items)
 
 # print corrector.correct(input_text)
 # package_directory = os.path.dirname(os.path.abspath(__file__))
 
-
-image = cv2.imread('WW.jpg')
+image = cv2.imread('ww - Copy.jpg')
 
 # CharReco2.tester_char(image)
 
@@ -30,132 +36,95 @@ image_bw, image_gray = segmenter.preprocess(image)
 lines = segmenter.segment_lines(image_bw)
 
 classified_text = ""
+ctp = ""
+ctc = ""
+ctn = ""
+
 for line in lines[:]:
     character_images = segmenter.segment(line)
 
-    # for current, next in zip(the_list, the_list[1:]):
-    char1=" "
-    char2 = " "
-    char3=" "
-    for current_char_image, next_char_image in zip(character_images,character_images[1:]):
+    # for character_image in character_images:
+    #     character_image_ = character_image.copy()
+    #     classified_text += str(classifier.classify(character_image,0)[0])
+    #
+    #     nxt=character_images[character_images.index(character_image.all())+1]
 
-###################################################################################
-        if (current_char_image == np.array([0])).all():
-            classified_text += " "
-        else:
+        # print str(classifier.classify(nxt,0)[0])
+
+
+    # for current_char_img, next_char_img in zip(character_images, character_images[1:]):
+
+    # for previous_char_img, current_char_img in zip([None]+character_images[:-1], character_images):
+    i=0
+    for previous_char_img, current_char_img in previous_and_next(character_images):
+
+
+            # previous_char_img =previous_char_img_.copy()
+            # current_char_img = current_char_img.copy()
+            # next_char_img = next_char_img.copy()
+
+
+#             classified_text += str(classifier.classify(current_char_img,0)[0])
+# ###################################################################################
+#
             index=0
-            current_char_image = current_char_image.copy()
-            next_char_image = next_char_image.copy()
-            cv2.bitwise_not(current_char_image, current_char_image)
-            cv2.bitwise_not(next_char_image,next_char_image)
-            # classified_text += classifier.classify(character_image_, index)
-###################################################################################
 
-        # character_image_ = character_image.copy()
-        # cv2.bitwise_not(character_image, character_image_)
-        # #
-        # index=0
-
-
-            ##char 2 changes always
-
-            index_max=99
-            char2, index_max = classifier.classify(current_char_image, index)
-            for index in range(index, index_max):
-
-#if char2 is a right modifier  #1) char1 should be a character  #2) char3 is a not a right modifier(left modifier or a character)
-                if char_pos.right_mod.__contains__(char2):
-                    if char_pos.base_char.__contains__(char1):
-                        if char_pos.left_mod.__contains__(char3) or char_pos.left_mod.__contains__(char3):
-                            classified_text = classified_text+char2
-
-                            index = 0
-                            print "!!!!!!!!!!"
-                            char1=char2
-                            char2=char3
-                            char3, index_max=classifier.classify(next_char_image, index)
-                            print char3+"------"
-                            break
-                else:
-                    index=index+1
-                    char2, index_max=classifier.classify(current_char_image, index)
-                    print "#########"
-
-##if char2 is a left modifier  #1) char1 is a right modifier or a character #2) char2 is a character
-                if char_pos.right_mod.__contains__(char2):
-                    if char_pos.base_char.__contains__(char1):
-                        if char_pos.left_mod.__contains__(char3) or char_pos.left_mod.__contains__(char3):
-                            classified_text = classified_text+char2
-
-                            index = 0
-                            print "!!!!!!!!!!"
-                            char1=char2
-                            char2=char3
-                            char3, index_max=classifier.classify(next_char_image, index)
-                            print char3+"------"
-                            break
-                else:
-                    index=index+1
-                    char2, index_max=classifier.classify(current_char_image, index)
-                    print "#########"
-
-##if char2 is a character #1) left/right modifier or a characte
-                if char_pos.right_mod.__contains__(char2):
-                    if char_pos.base_char.__contains__(char1):
-                        if char_pos.left_mod.__contains__(char3) or char_pos.left_mod.__contains__(char3):
-                            classified_text = classified_text+char2
-
-                            index = 0
-                            print "!!!!!!!!!!"
-                            char1=char2
-                            char2=char3
-                            char3, index_max=classifier.classify(next_char_image, index)
-                            print char3+"------"
-                            break
-                else:
-                    index=index+1
-                    char2, index_max=classifier.classify(current_char_image, index)
-                    print "#########"
-
-##if char2 has lower modifiers
-                if char_pos.right_mod.__contains__(char2):
-                    if char_pos.base_char.__contains__(char1):
-                        if char_pos.left_mod.__contains__(char3) or char_pos.left_mod.__contains__(char3):
-                            classified_text = classified_text+char2
-
-                            index = 0
-                            print "!!!!!!!!!!"
-                            char1=char2
-                            char2=char3
-                            char3, index_max=classifier.classify(next_char_image, index)
-                            print char3+"------"
-                            break
-                else:
-                    index=index+1
-                    char2, index_max=classifier.classify(current_char_image, index)
-                    print "#########"
-
-##if char 2 has upper modifiers
-                if char_pos.right_mod.__contains__(char2):
-                    if char_pos.base_char.__contains__(char1):
-                        if char_pos.left_mod.__contains__(char3) or char_pos.left_mod.__contains__(char3):
-                            classified_text = classified_text+char2
-
-                            index = 0
-                            print "!!!!!!!!!!"
-                            char1=char2
-                            char2=char3
-                            char3, index_max=classifier.classify(next_char_image, index)
-                            print char3+"------"
-                            break
-                else:
-                    index=index+1
-                    char2, index_max=classifier.classify(current_char_image, index)
-                    print "#########"
-
-
+            prv_char =classifier.classify(previous_char_img, 0)
+            cnt_char =classifier.classify(current_char_img, 0)
+            cv2.imwrite('T/'+str(i)+'pre.jpg',previous_char_img)
+            cv2.imwrite('T/'+str(i)+'cur.jpg',current_char_img)
+            i=i+1
+            print str(prv_char)+" : "#+str(cnt_char)
+            # ctp += prv_char
+            # ctc += str(classifier.classify(current_char_img,0)[0])
+            #
+            # for index in range(0,99):
+            #
+            #     # if current is a left modifier
+            #         # prev : space or none, base char, right mod, upper mod, lower mod
+            #     if (char_pos.blank.__contains__(prv_char) or
+            #         char_pos.right_mod.__contains__(prv_char) or
+            #         char_pos.upper_mod_char.__contains__(prv_char) or
+            #         char_pos.lower_mod_char.__contains__(prv_char) or
+            #         char_pos.base_char.__contains__(prv_char)) and char_pos.left_mod.__contains__(cnt_char):
+            #             classified_text += cnt_char
+            #             print "char1:  "+ cnt_char
+            #             print "1------"
+            #             break
+            #     else:
+            #         index=index+1
+            #         cnt_char=classifier.classify(current_char_img, index)
+            #         print "1#########:  "+str(index)+": cnt "+cnt_char+"      prv"+prv_char
+            #
+            #     # if current is a right modifier
+            #         # prev : base char,
+            #     if char_pos.base_char.__contains__(prv_char) and char_pos.right_mod.__contains__(cnt_char):
+            #         classified_text += cnt_char
+            #         print "char2:  "+ cnt_char
+            #         print "2------"
+            #         break
+            #     else:
+            #         index=index+1
+            #         cnt_char=classifier.classify(current_char_img, index)
+            #         print "2#########"
+            #
+            #     # if current is a base char
+            #         # prev : left mod, base char, upper mod, lower mod, none/space
+            #     if (char_pos.base_char.__contains__(prv_char) or ) and char_pos.right_mod.__contains__(cnt_char):
+            #         classified_text += cnt_char
+            #         print "char2:  "+ cnt_char
+            #         print "2------"
+            #         break
+            #     else:
+            #         index=index+1
+            #         cnt_char=classifier.classify(current_char_img, index)
+            #         print "2#########"
 
 print "classified text : " + classified_text
+
+print ctp
+print ctc
+print ctn
 
 # corrected_text = corrector.correct(classified_text)
 # print "corrected text : " + corrected_text
