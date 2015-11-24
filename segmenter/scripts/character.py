@@ -29,9 +29,8 @@ fig4 = plt.figure()
 sub_plots4 = {}
 
 sub_plots4["0"] = fig4.add_subplot(211)
-sub_plots4["1"] = fig4.add_subplot(312)
+sub_plots4["1"] = fig4.add_subplot(212)
 sub_plots4["1"].invert_yaxis()
-sub_plots4["2"] = fig4.add_subplot(313)
 
 def resize(character, base_lines): 
   rows,cols = character.shape  
@@ -381,8 +380,34 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
   sub_plots4["1"].plot(from_bottom)
   
 
-  #sub_plots4["2"].plot(from_bottom)
+  # idx = np.argwhere(np.isclose(f, g, atol=10)).reshape(-1)
+  # plt.plot(x[idx], f[idx], 'ro')
+  graph_intersections = np.isclose(from_top, from_bottom, atol=5)
 
+  intersections = []
+  intersection_marker = False
+  for i, value in enumerate(graph_intersections):
+    if i > cols*0.1 and i < cols*0.9:
+      if value == True:
+        if intersection_marker == False:
+          intersections.append([i])
+        else:
+          intersections[-1].append(i)
+      intersection_marker = value
+  print intersections
+
+  for intersection in intersections:
+    
+    if len(intersection) >= 3:
+      from_bottom_ = from_bottom[intersection[0]-len(intersection):intersection[-1]+len(intersection)]
+
+      local_maxima_indexes = argrelextrema(np.asarray(from_bottom_), np.greater_equal)[0]
+      print local_maxima_indexes
+  #intersections_ = sum(intersections, [])
+  
+  #sub_plots4["1"].plot(intersections_)
+  #sub_plots4["2"].plot(from_bottom)
+  #print combined
   #   
   # cv2.waitKey(0)
 
