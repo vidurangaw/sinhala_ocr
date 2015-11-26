@@ -255,7 +255,7 @@ def segment_line(bw, line_no):
       if hor_hist[i-1] == 0:      
         current_segment_start = i
         if len(characters) > 1 :
-          if (i - current_segment_end) > l_base_line_diff*2:         
+          if (i - current_segment_end) > l_base_line_diff*1.2:         
             words.append(characters)
             characters = np.zeros(shape=(0,2))
     else:    

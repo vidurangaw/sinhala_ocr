@@ -76,21 +76,12 @@ def resize(character, base_lines):
 	elif bottom_rows > 21:    
 		dim = (bottom_cols, 21)
 		bottom = cv2.resize(bottom, dim, interpolation = cv2.INTER_NEAREST)   
-	#bottom_rows,bottom_cols = bottom.shape  
-
-	# dim_top = (top_cols, top_height)
-	# top_resized = cv2.resize(top, dim_top, interpolation = cv2.INTER_NEAREST)
-
-	# dim_bottom = (bottom_cols, bottom_height)
-	# bottom_resized = cv2.resize(bottom, dim_bottom, interpolation = cv2.INTER_NEAREST)
 
 	#join 3 segments
 	resized_1 = np.concatenate((top, middle), axis=0)
 	resized_2 = np.concatenate((resized_1, bottom), axis=0)  
 	
-	# rows,cols = character.shape  
-	# ver_hist = [0]*rows
-	# hor_hist = [0]*cols
+
 	return resized_2
 
 def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines, l_base_lines, category, code):
@@ -99,58 +90,10 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 	character_base_height = l_base_lines[1] - l_base_lines[0]
 
 	rows,cols = character.shape 
-	# max_value_index = ver_hist.index(max(ver_hist))
 
-
-	# local_maxima_indexes = argrelextrema(np.asarray(ver_hist), np.greater_equal)[0]
-
-	
-
-	# maximas_remove_count = len(local_maxima_indexes)*25/100
-	# local_maxima_indexes = local_maxima_indexes[maximas_remove_count:]
-	# local_maxima_indexes = local_maxima_indexes[:-maximas_remove_count]
-
-
-	# #for i, v in enumerate(local_maximas): 
-	# local_maxima_indexes_ = []
-	# for local_maxima_index in local_maxima_indexes: 
-	#   if ver_hist[local_maxima_index] > ver_hist[max_value_index]*0.5:    
-	#     local_maxima_indexes_.append(local_maxima_index)     
-			 
-
-	# max_distance = [0, 0, l_base_line_diff/2] 
-	
-	# # compare pairs for the optimum pair
-	# for p1, p2 in itertools.combinations(local_maxima_indexes_, 2):        
-	#   if abs(p1 - p2) > max_distance[2] and abs(p1 - p2) < l_base_line_diff*1.75:
-	#     max_distance[0] = p1
-	#     max_distance[1] = p2
-	#     max_distance[2] = abs(p1 - p2)      
-
-	#print boundary_lines
-	#print max_distance
-
-	# if boundary_lines[0] > 0.8*max_distance[0]:
-	#   max_distance[0] = boundary_lines[0]   
-
-	#19 36
-	#print boundary_lines[0]
-	#print "----"
-	
-				
-	# contours, hierarchy = cv2.findContours(top_,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-	# print len(contours)
-	# if len(contours) > 1:          
-	#   #resized_characters.extend(character_script.seg_overlapping_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
-	#   print "hori"
-	# else:
-	
-
-	#top = character
 	character_ = character.copy()
 	character__ = character.copy()
 	
-
 	contours, hierarchy = cv2.findContours(character_,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 	no_of_contours = len(contours)
 	contour_data = []
@@ -171,7 +114,7 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 			if contour_data[1][0] < base_lines[1]:
 				base_lines[1] = contour_data[1][1]
 			else:
-				if boundary_lines[1] < (base_lines[1] + character_base_height*0.5):
+				if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
 					base_lines[1] = boundary_lines[1] 
 		elif contour_data[0][1] > base_lines[0]:
 			base_lines[0] = contour_data[0][0]
@@ -179,36 +122,8 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 	else:    
 		if boundary_lines[0] > (base_lines[0] - character_base_height*0.5):    
 			base_lines[0] = boundary_lines[0]
-		if boundary_lines[1] < (base_lines[1] + character_base_height*0.5):
+		if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
 			base_lines[1] = boundary_lines[1] 
-
-	
-
-	# top = character__[0:base_lines[0], 0:cols]
-	# lines = cv2.HoughLinesP(top, 2, np.pi/180, 50, minLineLength = int(character_base_height*0.5), maxLineGap = 0)
-	# if lines is not None:
-	#   angles = np.empty([0])
-	#   for x1,y1,x2,y2 in lines[0]:        
-	#     cv2.line(character__,(x1,y1),(x2,y2),(0,255,0),1)
-
-	#     (dx, dy) = (x2-x1, y2-y1)
-	#     # Compute the angle
-	#     if dy != 0:
-	#       angle_ = math.atan(float(dx)/float(dy))
-	#     else:
-	#       angle_ = 0
-	#     # The_ angle is in radians (-pi/2 to +pi/2).  If you want degrees, you need the following line
-	#     angle_ *= 180/math.pi
-	#     # Now you have an angle from -90 to +90.  But if the player is below the turret,
-	#     # you want to flip it
-	#     if dy < 0:
-	#        angle_ += 180
-	#     if angle_ != 0:
-	#       angle_ = 90 - angle_
-	#     angles = np.append(angles, angle_)
-	#     print angle_
-	#   angle = np.mean(angles)
-	# cv2.imwrite(package_directory+'/'+category+'/'+code+'_l.jpg',character__)
 
 
 	return base_lines
@@ -222,31 +137,23 @@ def detect_verticle_regions(character, l_base_lines, l_boundary_lines, category,
 		for x in xrange(cols):
 			if character[y,x] == 255:
 					ver_hist[y] += 1
-
-	#character = character[boundary_lines[0]:boundary_lines[1], 0:cols] 
-
-	#del ver_hist[-(rows-boundary_lines[1]+1):]
-	#del ver_hist[boundary_lines[0]:]
-
-	# for x in xrange(cols):
-	#     for y in xrange(rows):
-	#       if character[y,x] == 255:
-	#           hor_hist[x] += 1
 	
 	boundary_lines = line_script.get_boundary_line_points(ver_hist)
 	boundary_lines_diff = boundary_lines[1] - boundary_lines[0]
 
 	base_lines = char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines, l_base_lines, category, code)
 	
+	print base_lines
+
 	character = resize(character, base_lines)
 	
-	return character, base_lines
-	#raise Exception('I know Python!') 
+	return character, base_lines	
 
 def seg_single_char(character, l_base_lines, l_boundary_lines, category, code):
 	 
 
 	resized_character, region_coordinates = detect_verticle_regions(character, l_base_lines, l_boundary_lines, category, code)
+	
 	rows,cols = character.shape 
 
 	character_ = character.copy()
@@ -560,6 +467,9 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	for p1, p2 in points_vertical:  
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
+
+		if p1[1] < l_base_lines[0]*0.8 or p2[1] > l_base_lines[1]*1.2:			
+			continue
 
 		cv2.line(character_clr,(p_col,0),(p_col,rows),[0,0,255],2)
 		cv2.imwrite(t_path+'.jpg', character_clr)
