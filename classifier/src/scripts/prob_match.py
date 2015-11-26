@@ -109,15 +109,19 @@ def probability_match(lower, middle, upper):
     # print numpy_arr
 
     sorted_numpy= numpy_arr[numpy_arr[:,0].argsort()[::-1]]
-    # print sorted_numpy
-    m=0
-    for m in range(0, len(sorted_numpy)):
+    return sorted_numpy
+
+
+def ret_match(sorted_numpy, index):
+    # m=0
+    index_max=len(sorted_numpy)
+    for m in range(index, index_max):
         # print sorted_numpy[1][1]
         char =char_map.char_map(sorted_numpy[m][1], sorted_numpy[m][2],sorted_numpy[m][3])
 
         # print sorted_numpy[1][1], sorted_numpy[1][2],sorted_numpy[1][3]
         if char != None:
-             return char, sorted_numpy[m][1], sorted_numpy[m][2],sorted_numpy[m][3]
+             return char, sorted_numpy[m][1], sorted_numpy[m][2],sorted_numpy[m][3], m, index_max
 
         # else:
         #     break

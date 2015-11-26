@@ -9,7 +9,7 @@ import corrector
 
 # input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලයa ඉහළන්  "
 
-image = cv2.imread('ww.jpg')
+image = cv2.imread('test.jpg')
 
 image_bw, image_gray = segmenter.preprocess(image)
 
@@ -19,13 +19,11 @@ classified_text = ""
 
 for i, line in enumerate(lines[:1]):
 	character_images = segmenter.segment_line(line, i)
-	for character_image in character_images:
-		if (character_image == np.array([0])).all():
-			classified_text += " "
-		else:		
-			classified_text += classifier.classify(character_image)
-			#classified_text += "2"				
+	for character_image in character_images:			
+		classified_text += classifier.classify(character_image)
+		#classified_text += "2"				
 
+# remove extra spaces
 classified_text = classified_text.strip()
 classified_text = " ".join(classified_text.split())
 
