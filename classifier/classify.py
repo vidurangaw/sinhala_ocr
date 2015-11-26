@@ -87,10 +87,7 @@ def classify(img):
 
 def classify_image(url):
     img = cv2.imread(url)
-    img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    img_ = img.copy()        
-    cv2.bitwise_not(img, img_)
-
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY) 
     classify(img_)
 
 #classify_image("/home/viduranga/Desktop/project/segmenter/single_characters/2_1_r.jpg")
