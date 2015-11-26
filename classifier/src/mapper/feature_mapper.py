@@ -44,7 +44,7 @@ def lower(character, y_low, y_high, x_low, x_high):
     dataArray.append(xMax)
     dataArray.append(yMin)
     dataArray.append(yMax)
-    dataArray.append
+    # dataArray.append
     dataArray.append(xMax-xMin)  #?
     dataArray.append(yMax-yMin)  #?
 
