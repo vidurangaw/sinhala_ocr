@@ -18,7 +18,7 @@ import character as character_script
 package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def delete_images(folder):
-  files = glob.glob(package_directory + "/" + folder + '/*')
+  files = glob.glob(package_directory + "/" + folder + '/*.jpg')
   for filename in files:
       os.unlink(filename)
 
@@ -91,6 +91,9 @@ def segment_lines(im):
   delete_images('overlapping_characters')
   delete_images('single_characters')
   delete_images('touching_characters')
+  delete_images('touching_characters/segmented')
+  delete_images('final_characters')
+  
 
   fig2 = plt.figure()
   sub_plots2 = {}
@@ -266,6 +269,8 @@ def segment_line(bw, line_no):
   words.append(characters)
 
   average_char_width = calc_avg_char_width(character_widths)
+
+  new_character_widths = []
  
   resized_characters = []
 
@@ -277,16 +282,28 @@ def segment_line(bw, line_no):
       if character_width < average_char_width*0.2:
         continue    
       cropped_character = bw[0:int(rows), int(words[i][j][0]):int(words[i][j][1])]
+      cropped_character_ = cropped_character.copy()
       
-      if average_char_width*120/100 > character_width and average_char_width*10/100 < character_width:      
-        print "single" 
+      if average_char_width*80/100 > character_width and average_char_width*10/100 < character_width:      
+        contours, hierarchy = cv2.findContours(cropped_character,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+        
+        #remove small contours
+        no_of_contours = 0
+        for contour in contours:
+          left,top,width,height = cv2.boundingRect(contour) 
+          if width > 10 or height > 10:            
+            no_of_contours += 1
 
-        character = character_script.seg_single_char(cropped_character, l_base_lines, l_boundary_lines, "single_characters", str(line_no)+'_'+str(i)+'_'+str(j))
-        resized_characters.append(character)
+        if no_of_contours > 1:              
+          resized_characters.extend(character_script.seg_overlapping_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
+        else:
+          print "single" 
+          character = character_script.seg_single_char(cropped_character_, l_base_lines, l_boundary_lines, "single_characters", str(line_no)+'_'+str(i)+'_'+str(j))
+          resized_characters.append(character)
         
       else:       
         rows,cols = cropped_character.shape        
-        cropped_character_ = cropped_character.copy()
+        
         
         contours, hierarchy = cv2.findContours(cropped_character,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
         
@@ -300,8 +317,9 @@ def segment_line(bw, line_no):
         if no_of_contours > 1:              
           resized_characters.extend(character_script.seg_overlapping_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
         else:
-          character_script.seg_touching_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j))
-                       
+          resized_characters.extend(character_script.seg_touching_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
+  for char_no, resized_character in enumerate(resized_characters):
+    cv2.imwrite(package_directory+'/final_characters/'+str(char_no)+'.jpg',resized_character) 
   # plt.show()
   # cv2.waitKey(0)  
   fig3.savefig(package_directory+'/figures/line_'+str(line_no)+'.jpg')
