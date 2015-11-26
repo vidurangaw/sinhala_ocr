@@ -1,6 +1,4 @@
 __author__ = 'Naleen'
-from src.mapper import feature_mapper
-from src.scripts import normalize, fileIO, locate_character, prob_match
 import pickle
 
 def loadfile():

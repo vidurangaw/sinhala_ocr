@@ -6,15 +6,14 @@ import numpy as np
 import cv2
 import Orange
 import os
-
+import time
 
 
 
 # from scipy. skimage import img_as_ubyte
 from src.mapper import feature_mapper
-from src.scripts import normalize, fileIO, locate_character, prob_match
 from src.mapper import validate_mapper
-import time
+from src.scripts import normalize, fileIO, locate_character, prob_match
 from src.scripts import loadfile
 
 
@@ -22,7 +21,6 @@ np.set_printoptions(threshold='nan')
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
-print package_directory
 def performance(char_matrix, char_time_matrix):
     for key,values in char_matrix.items():
         predicted = ""
@@ -125,7 +123,8 @@ def validator_char(start, end):
 
 
 # validator_char(start=30, end=35)
-validator_char(start=1, end=40)
+def validate():
+    validator_char(start=1, end=40)
 
 
 
