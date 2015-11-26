@@ -42,15 +42,15 @@ for line in lines[:]:
     character_images = segmenter.segment(line)
 
     for character_image in character_images:
-        # character_image_ = character_image.copy()
+        character_image_ = character_image.copy()
+
+        char=classifier.classify(character_image,0)
+        classified_text += char
         #
-        # char=classifier.classify(character_image,0)
-        # classified_text += char
-
-
-
-
-        char_pos.test_position(character_images, classified_text)
+        #
+        #
+        #
+        # char_pos.test_position(character_images, classified_text)
 
 print "corrected text : " + classified_text
 

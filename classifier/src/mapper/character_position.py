@@ -76,7 +76,7 @@ def test_position(character_images, classified_text):
 
                 # if current is blank
                 # prev : right mod, base char, upper mod, lower mod, base-hal, blank
-                if base_char.__contains__(cnt_char):
+                if blank.__contains__(cnt_char):
                     if (right_mod.__contains__(prv_char) or
                         base_char.__contains__(prv_char) or
                         upper_mod_char.__contains__(prv_char) or

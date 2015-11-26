@@ -25,14 +25,15 @@ def tune(zone, start, end, n_mid, reg_fact, max_iter):
 
     CAarr=[]
 
+    n_mid=20
+    max_iter=80
+    # reg_fact=30
+
+
     # for max_iter in range(1, 200):
     # for n_mid in range(1,100):
-    for reg_fact in range(0,100):
-        n_mid=20
-        max_iter=80
-        # reg_fact=30
-        reg_fact=reg_fact/10
-
+    for reg_fact in range(0,500):
+        reg_fact=reg_fact/100
         learner=[NN.NeuralNetworkLearner(n_mid=n_mid, reg_fact=reg_fact, max_iter=max_iter, normalize=True, rand=None)]
         cross_val = Orange.evaluation.testing.learn_and_test_on_test_data(learner, data_training,data_testing, preprocessors=(), callback=None, store_classifiers=1, store_examples=False)
         cross_val_data = Orange.evaluation.testing.ExperimentResults(
@@ -50,7 +51,6 @@ def tune(zone, start, end, n_mid, reg_fact, max_iter):
 
     #Cost graph
     plt.title("RegFact - Cost")
-    plt
     plt.savefig('test/RegFact - Cost.png')
     plt.close()
 

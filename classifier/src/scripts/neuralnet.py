@@ -72,8 +72,8 @@ class _NeuralNetwork:
         # Cost
         # J = np.sum(-self.y * np.log(a3) - (1 - self.y) * np.log(1 - a3)) / m
         J = np.sum(-self.y * np.log(a3) - (1 - self.y) * np.log(1 - a3))/m
-        # print J
-        errorArray.append(J)
+        error=a3-self.y
+        errorArray.append(error)
 
 
         t1 = Theta1.copy()
@@ -247,20 +247,6 @@ class NeuralNetworkLearner(Orange.classification.Learner):
             nn.fit(X, Y)
 
 
-        # # print errorArray
-        # fig_ephs=plt.figure()
-        # fig_ephs.suptitle("Epochs - Cost")
-        # ax1=fig_ephs.add_subplot(111)
-        # ax1.plot(errorArray)
-        # # fig_ephs.ylabel('some numbers')
-        #
-        # fig_ephs.savefig('test/foo'+str(randint(0,1000))+'.png')
-        # plt.show()
-
-
-
-        plt.plot(errorArray, label='')
-        plt.legend(loc='upper left')
 
 
 
