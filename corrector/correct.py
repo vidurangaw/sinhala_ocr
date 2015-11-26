@@ -19,6 +19,9 @@ def correct(input_text):
     edit_distances={}
 
 
+    input_text = input_text.decode("utf-8")
+
+
     input_text=input_text.replace(',',' ').replace('.',' ').replace('?',' ').replace('!',' ')
     # for test in text:
     #     test=test.encode('utf-8')
