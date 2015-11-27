@@ -187,7 +187,7 @@ def segment_lines(im):
 
 
   sub_plots2["0"].imshow(im, cmap='gray',vmin=0,vmax=255)     
-  fig2.savefig(package_directory+'/figures/lines.jpg')
+  fig2.savefig(package_directory+'/figures/lines.png')
 
   return line_images
 
@@ -322,6 +322,6 @@ def segment_line(bw, line_no):
     cv2.imwrite(package_directory+'/final_characters/'+str(char_no)+'.jpg',resized_character) 
   # plt.show()
   # cv2.waitKey(0)  
-  fig3.savefig(package_directory+'/figures/line_'+str(line_no)+'.jpg')
+  fig3.savefig(package_directory+'/figures/line_'+str(line_no)+'.png')
 
   return resized_characters      
