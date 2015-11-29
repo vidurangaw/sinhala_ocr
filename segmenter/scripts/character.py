@@ -106,17 +106,22 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 				no_of_contours += 1
 
 	contour_data = sorted(contour_data, key=lambda x: x[0])     
+	print contour_data
 	if len(contour_data) > 1:
 		print "horizontal group"
 		#if top
-		if contour_data[0][0] < base_lines[0]:
+		if contour_data[0][1] < base_lines[0] + character_base_height*0.3:
+			print "1"
 			base_lines[0] = contour_data[1][0]
 			if contour_data[1][0] < base_lines[1]:
+				print "2"
 				base_lines[1] = contour_data[1][1]
 			else:
+				print "3"
 				if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
 					base_lines[1] = boundary_lines[1] 
 		elif contour_data[0][1] > base_lines[0]:
+			print "4"
 			base_lines[0] = contour_data[0][0]
 			base_lines[1] = contour_data[0][1]      
 	else:    
@@ -125,6 +130,7 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 		if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
 			base_lines[1] = boundary_lines[1] 
 
+	print base_lines
 
 	return base_lines
 
@@ -143,7 +149,7 @@ def detect_verticle_regions(character, l_base_lines, l_boundary_lines, category,
 
 	base_lines = char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines, l_base_lines, category, code)
 	
-	print base_lines
+	#print base_lines
 
 	character = resize(character, base_lines)
 	
@@ -250,9 +256,10 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 		empty_image = empty_image[0:rows, left:right]
 		# empty_image_ = empty_image.copy()
 		# cv2.bitwise_not(empty_image, empty_image_)
-		
-		character = seg_single_char(empty_image, l_base_lines, l_boundary_lines, "overlapping_characters", code+'_'+str(k))
-
+		if len(horizontal_groups) > 1:
+			character = seg_single_char(empty_image, l_base_lines, l_boundary_lines, "overlapping_characters", code+'_'+str(k))
+		else:
+			character = seg_single_char(empty_image, l_base_lines, l_boundary_lines, "single_characters", code)
 		resized_characters.append(character)
 
 	return resized_characters    
@@ -295,16 +302,16 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	for x in range(cols):   
 		for y in range(0, int(rows)):
 			if character_[y,x] == 255:
-				if x % 5 == 0:        
+				if x % 4 == 0:        
 					character_[y-1:y,x] = 255
 					character_clr[y-1:y,x] = 255
-				if x % 10 == 0:        
+				if x % 8 == 0:        
 					character_[y-2:y,x] = 255
 					character_clr[y-2:y,x] = 255
-				if x % 15 == 0:        
+				if x % 12 == 0:        
 					character_[y-3:y,x] = 255
 					character_clr[y-3:y,x] = 255
-				if x % 20 == 0:        
+				if x % 16 == 0:        
 					character_[y-4:y,x] = 255   
 					character_clr[y-4:y,x] = 255       
 				break
@@ -336,15 +343,17 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 			end = tuple(cnt[e][0])
 			far = tuple(cnt[f][0])      
 			cv2.line(character_clr,start,end,[255,0,0],2)
-			if d > 1500:
+			if d > 1000:
 				points.append(far)      
 				cv2.circle(character_clr,far,3,[0,0,255],-1)
+
+	#cv2.imwrite(t_path+'__.jpg', character_clr)
 
 	segment_points = []
 
 	points_three = []
 	points_close = []
-	points_horizontal = []
+	points_l_shape = []
 	points_vertical = []
 
 	#character_base_height = 50
@@ -398,7 +407,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 						remove_indices.extend([p1[0], p2[0]])
 			points = [i for j, i in enumerate(points) if j not in remove_indices]
 		
-		#consider horizontally aligned points
+		#consider L shape aligned points
 		if len(points) > 1:     
 			remove_indices = []     
 			for p1, p2 in itertools.combinations(enumerate(points), 2): 
@@ -407,19 +416,19 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 					if abs(p1[1][1] - p2[1][1]) < 20 and abs(p1[1][0] - p2[1][0]) < 20:
 						h_points = [list(p1[1]), list(p2[1])]
 						h_points = list(reversed(sorted(h_points, key=lambda x: float(x[1]), reverse=True)))
-						points_horizontal.append(h_points)      
+						points_l_shape.append(h_points)      
 
 						remove_indices.extend([p1[0], p2[0]])
 						
 			points = [i for j, i in enumerate(points) if j not in remove_indices]
 	
 
-	print "-------"
+	# print "-------"
 
-	print('points_three : '), points_three
-	print('points_close : '), points_close
-	print('points_vertical : '), points_vertical
-	print('points_horizontal : '), points_horizontal
+	# print('points_three : '), points_three
+	# print('points_close : '), points_close
+	# print('points_vertical : '), points_vertical
+	# print('points_l_shape : '), points_l_shape
 
 	segment_points = []
 
@@ -430,6 +439,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 		if character_[p[1]-1][p[0]] != 0:			
 			continue
 
+		print "points_three"
 		cv2.line(character_clr,(p[0],0),(p[0],rows),[0,0,255],2)
 		cv2.imwrite(t_path+'.jpg', character_clr)	
 
@@ -448,7 +458,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	
 	#consider closely aligned points
 	for p1, p2 in points_close:
-		print "points_close"
+		
 
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
@@ -458,6 +468,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 		if character_[p2[1]+2][p1[0]] > 0:			
 			continue
 
+		print "points_close"
 		cv2.line(character_clr_,(p_col,0),(p_col,rows),[0,0,255],2)
 		cv2.imwrite(t_path+'.jpg', character_clr_)
 
@@ -465,12 +476,22 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
  
 	#consider vertically aligned points	
 	for p1, p2 in points_vertical:  
+		
+
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
 
 		if p1[1] < l_base_lines[0]*0.8 or p2[1] > l_base_lines[1]*1.2:			
 			continue
 
+		for point_ in points:
+			if point_[0] > p1[0]*1.2:
+				break
+			else:
+				continue
+		continue
+
+		print "points_vertical"
 		cv2.line(character_clr,(p_col,0),(p_col,rows),[0,0,255],2)
 		cv2.imwrite(t_path+'.jpg', character_clr)
 
@@ -486,8 +507,8 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 		cv2.imwrite(t_path+'_.jpg', character_clr_)
 		#print p
 	
-	#consider horizontally aligned points
-	for p1, p2 in points_horizontal: 
+	#consider L shape points
+	for p1, p2 in points_l_shape: 
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
 
@@ -495,6 +516,12 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 			continue
 		if character_[p2[1]-4][p2[0]] == 0:
 			continue
+		if character_[p2[1]][p2[0]+2] > 0:
+			continue	
+		if character_[p2[1]][p2[0]-2] == 0:
+			continue
+
+		print "points_l_shape"
 		cv2.line(character_clr_,(p_col,0),(p_col,rows),[0,0,255],2)
 		cv2.imwrite(t_path+'.jpg', character_clr_)
 
@@ -508,7 +535,8 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	segment_points.sort();
 	left_margin = 0
 	for char_no, segment_point in enumerate(segment_points):		
-
+		if segment_point - left_margin < 5:
+			continue
 		seg_character = character[0:rows, left_margin:segment_point]
 		left_margin = segment_point
 
@@ -521,7 +549,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	sub_plots4["0"].imshow(character_clr_)
 
 	#cv2.imwrite(package_directory+'/touching_characters/'+code+'.jpg', character_clr_)
-	#fig4.savefig(package_directory+'/figures/touching'+code+'.jpg')
+	#fig4.savefig(package_directory+'/figures/touching'+code+'.png')
 	
 	sub_plots4["0"].clear()
 	sub_plots4["1"].clear()

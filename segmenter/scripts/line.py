@@ -14,12 +14,16 @@ import math
 import itertools
 from sklearn.cluster import MeanShift, estimate_bandwidth
 import character as character_script
+import time
 
 package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def delete_images(folder):
-  files = glob.glob(package_directory + "/" + folder + '/*.jpg')
-  for filename in files:
+  files_jpg = glob.glob(package_directory + "/" + folder + '/*.jpg')
+  files_png = glob.glob(package_directory + "/" + folder + '/*.png')
+  files_jpg.extend(files_png)
+  
+  for filename in files_jpg:
       os.unlink(filename)
 
 def l_get_base_line_points(ver_hist):
@@ -46,22 +50,19 @@ def l_get_base_line_points(ver_hist):
   
   #print local_maxima_indexes_
 
-  max_distance = []
-  max_distance.append(math.fabs(local_maxima_indexes_[0] - local_maxima_indexes_[1]))
-  max_distance.append(local_maxima_indexes_[0])
-  max_distance.append(local_maxima_indexes_[1])  
+  max_distance = 0
+  base_lines = [0, 0] 
 
   for p1, p2 in itertools.combinations(local_maxima_indexes_, 2):        
-    if abs(p1 - p2) > max_distance[0]:
-      max_distance[0] = abs(p1 - p2)
-      max_distance[1] = p1
-      max_distance[2] = p2
+    if abs(p1 - p2) > max_distance:
+      max_distance = abs(p1 - p2)
+      base_lines[0] = p1
+      base_lines[1] = p2
   
   
-  max_distance.pop(0)
-  max_distance.sort()
+  base_lines.sort()
 
-  return max_distance
+  return local_maxima_indexes
 
 def get_boundary_line_points(ver_hist):  
   top_line = np.nonzero(ver_hist)[0][0]
@@ -198,10 +199,10 @@ def segment_line(bw, line_no):
   fig3 = plt.figure()
   sub_plots3 = {}
 
-  sub_plots3["0"] = fig3.add_subplot(411)
-  sub_plots3["1"] = fig3.add_subplot(412)
-  sub_plots3["2"] = fig3.add_subplot(413)
-  sub_plots3["3"] = fig3.add_subplot(414)
+  sub_plots3["0"] = fig3.add_subplot(211)
+  sub_plots3["1"] = fig3.add_subplot(212)
+  #sub_plots3["2"] = fig3.add_subplot(413)
+  #sub_plots3["3"] = fig3.add_subplot(414)
 
   rows, cols = bw.shape
 
@@ -222,9 +223,9 @@ def segment_line(bw, line_no):
   l_boundary_lines = get_boundary_line_points(ver_hist)
   l_boundary_lines_diff = l_boundary_lines[1] - l_boundary_lines[0]
 
-
-  sub_plots3["0"].hlines(y=l_base_lines[0], xmin=0, xmax=cols, linewidth=2, color = 'b')
-  sub_plots3["0"].hlines(y=l_base_lines[1], xmin=0, xmax=cols, linewidth=2, color = 'b')
+  for l_base_line_pos in l_base_lines:
+    sub_plots3["0"].hlines(y=l_base_line_pos, xmin=0, xmax=cols, linewidth=1, color = 'b')
+  #sub_plots3["0"].hlines(y=l_base_lines[1], xmin=0, xmax=cols, linewidth=1, color = 'b')
 
 
 
@@ -240,6 +241,7 @@ def segment_line(bw, line_no):
   sub_plots3["1"].plot(hor_hist)
   sub_plots3["1"].set_xlim([0,cols-1])
 
+  fig3.savefig(package_directory+'/figures/line_'+str(line_no)+'.png')
 
   words = []
   characters = np.zeros(shape=(0,2))
@@ -278,13 +280,14 @@ def segment_line(bw, line_no):
     resized_characters.append(np.array([0]))
     for j in range(len(words[i])):
       character_width = words[i][j][1] - words[i][j][0]
+      
       #ignore smaller character(commas, fullstops)
       if character_width < average_char_width*0.2:
         continue    
       cropped_character = bw[0:int(rows), int(words[i][j][0]):int(words[i][j][1])]
       cropped_character_ = cropped_character.copy()
       
-      if average_char_width*80/100 > character_width and average_char_width*10/100 < character_width:      
+      if character_width < average_char_width: 
         contours, hierarchy = cv2.findContours(cropped_character,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
         
         #remove small contours
@@ -318,10 +321,13 @@ def segment_line(bw, line_no):
           resized_characters.extend(character_script.seg_overlapping_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
         else:
           resized_characters.extend(character_script.seg_touching_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
-  for char_no, resized_character in enumerate(resized_characters):
-    cv2.imwrite(package_directory+'/final_characters/'+str(char_no)+'.jpg',resized_character) 
+  
   # plt.show()
   # cv2.waitKey(0)  
-  fig3.savefig(package_directory+'/figures/line_'+str(line_no)+'.png')
+  
+
+  for char_no, resized_character in enumerate(resized_characters):
+    cv2.imwrite(package_directory+'/final_characters/'+str(char_no)+'.jpg',resized_character) 
+  
 
   return resized_characters      
