@@ -33,7 +33,8 @@ def generate_audio2():
 
 def generate_audio3(phoneme_list):
 
-    for i in phoneme_list:
-        combined_sounds = combined_sounds + AudioSegment.from_wav(dictionary.sounds[i])
+    combined_sounds = AudioSegment.from_wav(dictionary.sounds[phoneme_list[0]])
+    for i in range(1, len(phoneme_list), 1):
+        combined_sounds = combined_sounds + AudioSegment.from_wav(dictionary.sounds[phoneme_list[i]])
 
     combined_sounds.export("output/output3.wav", format="wav")
