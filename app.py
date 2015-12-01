@@ -4,6 +4,7 @@ from flask import Flask, render_template, json, request,redirect,session,jsonify
 from werkzeug.wsgi import LimitedStream
 import uuid
 import os
+import sinhala_ocr
 
 # mysql = MySQL()
 app = Flask(__name__)
@@ -21,23 +22,23 @@ pageLimit = 5
 
 class StreamConsumingMiddleware(object):
 
-    def __init__(self, app):
-        self.app = app
+	def __init__(self, app):
+		self.app = app
 
-    def __call__(self, environ, start_response):
-        stream = LimitedStream(environ['wsgi.input'],
-                               int(environ['CONTENT_LENGTH'] or 0))
-        environ['wsgi.input'] = stream
-        app_iter = self.app(environ, start_response)
-        try:
-            stream.exhaust()
-            for event in app_iter:
-                yield event
-        finally:
-            if hasattr(app_iter, 'close'):
-                app_iter.close()
+	def __call__(self, environ, start_response):
+		stream = LimitedStream(environ['wsgi.input'],
+							   int(environ['CONTENT_LENGTH'] or 0))
+		environ['wsgi.input'] = stream
+		app_iter = self.app(environ, start_response)
+		try:
+			stream.exhaust()
+			for event in app_iter:
+				yield event
+		finally:
+			if hasattr(app_iter, 'close'):
+				app_iter.close()
 
-app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.wsgi_app = StreamConsumingMiddleware(app.wsgi_app)
 
 
@@ -45,17 +46,23 @@ app.wsgi_app = StreamConsumingMiddleware(app.wsgi_app)
 
 @app.route('/')
 def showIndex():
-    # print "ccc"
-    return render_template('index.html')
+	# print "ccc"
+	return render_template('index.html')
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    if request.method == 'POST':
-    	file = request.files['file']
-        extension = os.path.splitext(file.filename)[1]
-    	f_name = str(uuid.uuid4()) + extension
-    	file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
-        return json.dumps({'filename':f_name})
+	if request.method == 'POST':
+		file = request.files['file']
+		extension = os.path.splitext(file.filename)[1]
+		f_name = file.filename
+
+		upload_path = os.path.join(app.config['UPLOAD_FOLDER'], f_name)
+		#print upload_path
+		file.save(upload_path)
+		
+		output = sinhala_ocr.run(upload_path)
+		
+		return json.dumps({'text':output[0], 'image':output[1], 'audio':output[2]})
 
 
 
@@ -63,16 +70,16 @@ def upload():
 @app.route('/publish',methods=['POST'])
 def addWish():
 
-    try:
-        return render_template('result.html')
+	try:
+		return render_template('result.html')
 
-        #else:
-            #return render_template('error.html',error = 'Unauthorized Access')
-    except Exception as e:
-        return render_template('error.html',error = str(e))
-    #finally:
-        #cursor.close()
-        #conn.close()
+		#else:
+			#return render_template('error.html',error = 'Unauthorized Access')
+	except Exception as e:
+		return render_template('error.html',error = str(e))
+	#finally:
+		#cursor.close()
+		#conn.close()
 
 # @app.route('/showSignin')
 # def showSignin():
@@ -124,10 +131,10 @@ def addWish():
 # def getWishById():
 #     try:
 #         if session.get('user'):
-            
+			
 #             _id = request.form['id']
 #             _user = session.get('user')
-    
+	
 #             conn = mysql.connect()
 #             cursor = conn.cursor()
 #             cursor.callproc('sp_GetWishById',(_id,_user))
@@ -154,7 +161,7 @@ def addWish():
 #             con = mysql.connect()
 #             cursor = con.cursor()
 #             cursor.callproc('sp_GetWishByUser',(_user,_limit,_offset,_total_records))
-            
+			
 #             wishes = cursor.fetchall()
 #             cursor.close()
 
@@ -164,7 +171,7 @@ def addWish():
 
 #             outParam = cursor.fetchall()
 
-            
+			
 
 #             response = []
 #             wishes_dict = []
@@ -177,7 +184,7 @@ def addWish():
 #                 wishes_dict.append(wish_dict)
 #             response.append(wishes_dict)
 #             response.append({'total':outParam[0][0]}) 
-                
+				
 
 
 
@@ -202,10 +209,10 @@ def addWish():
 #             _isPrivate = request.form['isPrivate']
 #             _isDone = request.form['isDone']
 
-            
+			
 
 
-            
+			
 
 #             conn = mysql.connect()
 #             cursor = conn.cursor()
@@ -229,9 +236,9 @@ def addWish():
 #     try:
 #         _username = request.form['inputEmail']
 #         _password = request.form['inputPassword']
-        
+		
 
-        
+		
 #         # connect to mysql
 
 #         con = mysql.connect()
@@ -239,7 +246,7 @@ def addWish():
 #         cursor.callproc('sp_validateLogin',(_username,))
 #         data = cursor.fetchall()
 
-        
+		
 
 
 #         if len(data) > 0:
@@ -250,7 +257,7 @@ def addWish():
 #                 return render_template('error.html',error = 'Wrong Email address or Password.')
 #         else:
 #             return render_template('error.html',error = 'Wrong Email address or Password.')
-            
+			
 
 #     except Exception as e:
 #         return render_template('error.html',error = str(e))
@@ -268,9 +275,9 @@ def addWish():
 
 #         # validate the received values
 #         if _name and _email and _password:
-            
+			
 #             # All Good, let's call MySQL
-            
+			
 #             conn = mysql.connect()
 #             cursor = conn.cursor()
 #             _hashed_password = generate_password_hash(_password)
@@ -292,4 +299,4 @@ def addWish():
 #         conn.close()
 
 if __name__ == "__main__":
-    app.run(port=5000)
+	app.run(debug=True, port=5000)
