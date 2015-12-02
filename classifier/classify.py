@@ -21,12 +21,16 @@ np.set_printoptions(threshold='nan')
 classifier_lower = pickle.load(open(os.path.join(package_directory,'learner/ANN_lower')))
 classifier_middle = pickle.load(open(os.path.join(package_directory,'learner/ANN_middle')))
 classifier_upper = pickle.load(open(os.path.join(package_directory,'learner/ANN_upper')))
-lowerZoneLabels = fileIO.read_label_file('learner/lowerZoneLabels')
-middleZoneLabels = fileIO.read_label_file('learner/middleZoneLabels')
-upperZoneLabels = fileIO.read_label_file('learner/upperZoneLabels')
+# lowerZoneLabels = fileIO.read_label_file('learner/lowerZoneLabels')
+# middleZoneLabels = fileIO.read_label_file('learner/middleZoneLabels')
+# upperZoneLabels = fileIO.read_label_file('learner/upperZoneLabels')
 
 
 def classify(img):
+    lowerZoneLabels = fileIO.read_label_file('learner/lowerZoneLabels')
+    middleZoneLabels = fileIO.read_label_file('learner/middleZoneLabels')
+    upperZoneLabels = fileIO.read_label_file('learner/upperZoneLabels')
+
     index = 0
     #print img
     # for i in range(1, 3)
