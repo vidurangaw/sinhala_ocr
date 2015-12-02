@@ -125,7 +125,7 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 			base_lines[0] = contour_data[0][0]
 			base_lines[1] = contour_data[0][1]      
 	else:    
-		if boundary_lines[0] > (base_lines[0] - character_base_height*0.5):    
+		if boundary_lines[0] > (base_lines[0] - character_base_height*0.3):    
 			base_lines[0] = boundary_lines[0]
 		if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
 			base_lines[1] = boundary_lines[1] 

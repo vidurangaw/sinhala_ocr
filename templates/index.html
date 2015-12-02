@@ -23,8 +23,9 @@
 				url: 'upload',
 				dataType: 'json',
 				add: function (e, data) {  
-					$(".after_").hide()					
-					$("#submit_button").click(function () {
+					$(".after_").hide()
+					$(".loading").hide()										
+					$("#submit_button").off('click').on('click', function () {						
 						$(".loading").show()
 						data.submit();
 					});
@@ -32,6 +33,8 @@
 				success: function (response, status) {
 					console.log(response);					
 					$(".loading").hide()
+					$(".after_").hide()
+						
 					$(".processed_image").attr("src", response.image);
 					$(".classified_text").val(response.text);					
 					$(".audio").attr("src", response.audio);	
@@ -82,6 +85,10 @@
 			background: white;
 			cursor: inherit;
 			display: block;
+		}
+
+		label {
+		  color: #737373;
 		}
 
 		.bar {
@@ -136,7 +143,7 @@
 
 	<div class="row well">
 	
-		<label for="txtPost">Upload a document image</label></br>
+		<label for="txtPost">Upload an image of a document</label></br>
 		<div class="col-sm-12">
 			
 			<div class="row">

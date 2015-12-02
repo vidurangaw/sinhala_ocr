@@ -23,7 +23,7 @@ def delete_images(folder):
   files_png = glob.glob(package_directory + "/" + folder + '/*.png')
   files_jpg.extend(files_png)
 
-  for filename in files_png:
+  for filename in files_jpg:
       os.unlink(filename)
 
 def l_get_base_line_points(ver_hist):

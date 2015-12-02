@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 import cv2
 import numpy as np
+import wave
 import segmenter
 import classifier
 import corrector
-# import synthesizer
+import synthesizer
 
 # input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලයa ඉහළන්  "
 def run(image_path):
 	image_path_ = image_path.rsplit('.', 1)[0]
 	preprocess_image_path = image_path_+'_bw.jpg'
+	audio_path = image_path_+'.wav'
 
 	image = cv2.imread(image_path)
 
@@ -31,11 +33,24 @@ def run(image_path):
 	classified_text = classified_text.strip()
 	classified_text = " ".join(classified_text.split())
 
-	print "classified text : " + classified_text
+	# corrected_text = corrector.correct(classified_text)
+	corrected_text = classified_text
+	# "ස්ථානාධිපති"
+	print corrected_text
 
-	return classified_text, preprocess_image_path, "static/uploads/ww4.wav"
+	synthesized_data = synthesizer.synthesize("ස")
 
-# corrected_text = corrector.correct(classified_text)
-#print "corrected text : " + corrected_text
+	# print "classified text : " + classified_text
 
-# synthesized_voice = synthesizer.synthesize(corrected_text)
+	audio_outfile = wave.open(audio_path, 'wb')
+
+	audio_outfile.setparams(synthesized_data[0][0])
+
+	for i in range(0, len(synthesized_data), 1):
+			audio_outfile.writeframes(synthesized_data[i][1])
+
+	# #print "corrected text : " + corrected_text
+
+
+
+	return classified_text, preprocess_image_path, audio_path

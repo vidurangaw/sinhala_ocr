@@ -18,6 +18,8 @@ def preprocess(image):
   #gray_smoothed = cv2.medianBlur(gray_equalized,1)
   #gray_smoothed = gray_equalized
   ret3,bw = cv2.threshold(gray_smoothed,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+
+  print ret3
   #bw = cv2.threshold(gray_smoothed, 127, 255, cv2.THRESH_BINARY_INV)[1]
 
 

@@ -5,10 +5,10 @@ import grapheme_mapper
 import phoneme_mapper
 import speech_generator
 
-file = open('input/input_text.txt', 'r')
-raw_text = file.read()
-text = raw_text[3:]
-print text
+# file = open('input/input_text.txt', 'r')
+# raw_text = file.read()
+# text = raw_text[3:]
+# print text
 
 def synthesize(text):
 
@@ -21,9 +21,9 @@ def synthesize(text):
     phoneme_list = phoneme_mapper.map_phonemes(grapheme_list)
     print phoneme_list
 
-    speech_generator.generate_audio(phoneme_list)
+    return speech_generator.generate_audio(phoneme_list)
 
-synthesize(text)
+#synthesize(text)
 
 
 
