@@ -23,7 +23,7 @@ def run(image_path):
 
 	classified_text = ""
 
-	for i, line in enumerate(lines[:1]):
+	for i, line in enumerate(lines):
 		character_images = segmenter.segment_line(line, i)
 		for character_image in character_images:			
 			classified_text += classifier.classify(character_image)
