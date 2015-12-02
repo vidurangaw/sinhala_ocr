@@ -17,7 +17,7 @@ def run(image_path):
 
 	image_bw = segmenter.preprocess(image)
 
-	cv2.imwrite(preprocess_image_path, image_bw)
+	cv2.imwrite(preprocess_image_path, image_bw) 
 
 	lines = segmenter.segment_lines(image_bw)
 
@@ -25,9 +25,9 @@ def run(image_path):
 
 	for i, line in enumerate(lines[:1]):
 		character_images = segmenter.segment_line(line, i)
-		for character_image in character_images:
+		for character_image in character_images:			
 			classified_text += classifier.classify(character_image)
-			#classified_text += "2"
+			#classified_text += "2"				
 
 	# remove extra spaces
 	classified_text = classified_text.strip()

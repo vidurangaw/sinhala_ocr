@@ -1,18 +1,26 @@
 import cv2
 import numpy as np
 import math
+import os
+import time
+
+
+package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def preprocess(image):
+ 
   gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY) 
-  clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8,8))
-  gray_equalized = clahe.apply(gray)
+  #clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(2,2))
+  #gray_equalized = clahe.apply(gray)
     
-  gray_smoothed = cv2.fastNlMeansDenoising(gray_equalized,None,5,7,13)
+  gray_smoothed = cv2.fastNlMeansDenoising(gray,None,5,7,13)
   #gray_smoothed = cv2.GaussianBlur(gray_equalized,(3,3),0)
   #gray_smoothed = cv2.medianBlur(gray_equalized,1)
   #gray_smoothed = gray_equalized
+  ret3,bw = cv2.threshold(gray_smoothed,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
-  bw = cv2.threshold(gray_smoothed, 127, 255, cv2.THRESH_BINARY_INV)[1]
+  print ret3
+  #bw = cv2.threshold(gray_smoothed, 127, 255, cv2.THRESH_BINARY_INV)[1]
 
 
   #bw = cv2.adaptiveThreshold(gray_smoothed,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV,11,2)
@@ -45,16 +53,16 @@ def preprocess(image):
       angle_ = 90 - angle_
     angles = np.append(angles, angle_)
 
-  #print angles
   #remove outliers from a angle list
   angles = angles[abs(angles - np.mean(angles)) < 2 * np.std(angles)]
   if angles.size > 0:
+    #get mean of angle list
     rotation_angle = np.mean(angles)
   else:
     rotation_angle = 0
-  #print angles 
-  #get mean of angle list
-  
+     
+  #cv2.imwrite(package_directory+'bw.jpg',bw) 
+
   print "doc rotation angle : "+ str(rotation_angle)
 
 
@@ -63,6 +71,6 @@ def preprocess(image):
   center = (w / 2, h / 2)
   M = cv2.getRotationMatrix2D(center, rotation_angle, 1.0)
   rotated = cv2.warpAffine(bw, M, (w, h))
-  rotated_gray = cv2.warpAffine(gray_smoothed, M, (w, h))
-
-  return rotated, rotated_gray
+  # rotated_gray = cv2.warpAffine(gray_smoothed, M, (w, h))
+ 
+  return rotated
