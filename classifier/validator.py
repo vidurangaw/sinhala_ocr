@@ -49,6 +49,7 @@ def validator_char(start, end):
     # iMax=5
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
+    index=0
     dataString_middle=""
     dataString_lower=""
     dataString_upper=""
@@ -99,10 +100,10 @@ def validator_char(start, end):
             # print char1
 
 
-            predicted_char, lower, middle, upper = prob_match.probability_match(lower=[LowerZoneProb,lowerZoneLabels],
+            sorted_numpy = prob_match.probability_match(lower=[LowerZoneProb,lowerZoneLabels],
                                                 middle=[MiddleZoneProb, middleZoneLabels],
                                                 upper=[UpperZoneProb,upperZoneLabels])
-
+            predicted_char, lower, middle, upper, index, index_max=prob_match.ret_match(sorted_numpy, index)
             # char_mapper.char_map()
             input_char= validate_mapper.char_map(i)
             time_end=time.time()
@@ -122,10 +123,12 @@ def validator_char(start, end):
 
 
 
-# validator_char(start=30, end=35)
-def validate():
-    validator_char(start=1, end=40)
 
+def validate():
+    validator_char(start=30, end=40)
+
+
+# validate()
 
 
 

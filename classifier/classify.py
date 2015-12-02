@@ -89,7 +89,8 @@ def classify(img):
 def classify_image(url):
     img = cv2.imread(url)
     img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    classify(img)
+    char = classify(img)
+    print char
 
 #classify_image("/home/viduranga/Desktop/project/segmenter/single_characters/2_1_r.jpg")
-# classify_image("C:/Users/Naleen/Desktop/New folder (3)/c (3).png")
+# classify_image("C:/Users/Naleen/PycharmProjects/sinhala_ocr/segmenter/final_characters/14.jpg")

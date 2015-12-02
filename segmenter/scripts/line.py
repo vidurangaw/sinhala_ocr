@@ -19,6 +19,7 @@ package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def delete_images(folder):
   files = glob.glob(package_directory + "/" + folder + '/*.jpg')
+  files.extend(glob.glob(package_directory + "/" + folder + '/*.png'))
   for filename in files:
       os.unlink(filename)
 
@@ -318,6 +319,7 @@ def segment_line(bw, line_no):
           resized_characters.extend(character_script.seg_overlapping_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
         else:
           resized_characters.extend(character_script.seg_touching_char(cropped_character_, l_base_lines, l_boundary_lines, str(line_no)+'_'+str(i)+'_'+str(j)))
+
   for char_no, resized_character in enumerate(resized_characters):
     cv2.imwrite(package_directory+'/final_characters/'+str(char_no)+'.jpg',resized_character) 
   # plt.show()
