@@ -86,10 +86,10 @@ def classify(img):
                LowerZoneProb[i] = 1
 
 
-        if classifier_upper(dataArray_upper, Orange.classification.Classifier.GetValue) == 'm0':
+        if classifier_upper(dataArray_upper, Orange.classification.Classifier.GetValue) == 'u0':
 
             for i in range(0, len(upperZoneLabels)):
-               upperZoneLabels[i] = 'm0'
+               upperZoneLabels[i] = 'u0'
 
             for i in xrange(0, len(UpperZoneProb)):
                UpperZoneProb[i] = 1
