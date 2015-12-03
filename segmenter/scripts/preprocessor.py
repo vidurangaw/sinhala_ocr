@@ -17,20 +17,23 @@ def preprocess(image):
   #gray_smoothed = cv2.GaussianBlur(gray_equalized,(3,3),0)
   #gray_smoothed = cv2.medianBlur(gray_equalized,1)
   #gray_smoothed = gray_equalized
-  ret3,bw = cv2.threshold(gray_smoothed,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+  #ret3,bw = cv2.threshold(gray_smoothed,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
-  print ret3
-  #bw = cv2.threshold(gray_smoothed, 127, 255, cv2.THRESH_BINARY_INV)[1]
+  #print ret3
+  bw = cv2.threshold(gray_smoothed, 127, 255, cv2.THRESH_BINARY_INV)[1]
 
 
   #bw = cv2.adaptiveThreshold(gray_smoothed,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV,11,2)
-  
+
+
+  cv2.imwrite(package_directory+'/figures/pre-thesh.jpg',bw)
+
   rows,cols = bw.shape
 
   #### ---Fix skew angle--- #####
 
   #edges = cv2.Canny(gray_smoothed, 50, 150, apertureSize = 3)
-  lines = cv2.HoughLinesP(bw, 2, np.pi/180, 200, minLineLength = int(cols*0.2), maxLineGap = 200)[0]
+  lines = cv2.HoughLinesP(bw, 2, np.pi/180, 200, minLineLength = int(cols*0.5), maxLineGap = 200)[0]
   no_of_lines = len(lines)
 
   angles = np.empty([0])
@@ -61,7 +64,8 @@ def preprocess(image):
   else:
     rotation_angle = 0
      
-  #cv2.imwrite(package_directory+'bw.jpg',bw) 
+  #cv2.imwrite(package_directory+'bw.jpg',bw)
+  cv2.imwrite(package_directory+'/figures/pre-angles.jpg',image)
 
   print "doc rotation angle : "+ str(rotation_angle)
 
@@ -72,5 +76,7 @@ def preprocess(image):
   M = cv2.getRotationMatrix2D(center, rotation_angle, 1.0)
   rotated = cv2.warpAffine(bw, M, (w, h))
   # rotated_gray = cv2.warpAffine(gray_smoothed, M, (w, h))
+
+  cv2.imwrite(package_directory+'/figures/lines.jpg',rotated)
  
   return rotated
