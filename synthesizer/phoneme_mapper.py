@@ -25,10 +25,12 @@ def map_phonemes(grapheme_list):
             else:
                 phoneme_list.append(dictionary.phonemes[last + grapheme_list[i]])
 
+    new_list = []
     for i in range(0, len(phoneme_list), 1):
+        new_list.append(phoneme_list[i])
         if (phoneme_list[i]=='k') or (phoneme_list[i]=='th') or (phoneme_list[i]=='n'):
-            store = phoneme_list.pop()
-            previous = phoneme_list.pop()
+            store = new_list.pop()
+            previous = new_list.pop()
             if (previous.find('i')!= -1) \
                     or (previous.find('o')!= -1) \
                     or (previous.find('u')!= -1) \
@@ -36,13 +38,13 @@ def map_phonemes(grapheme_list):
                     or(previous.find('ang')!= -1)   \
                     or(previous.find('ru')!= -1)\
                     or(previous.find('aa')!= -1):
-                phoneme_list.append(previous)
-                phoneme_list.append(store)
+                new_list.append(previous)
+                new_list.append(store)
             else:
-                phoneme_list.append(previous[:-1])
-                phoneme_list.append(store)
+                new_list.append(previous[:-1])
+                new_list.append(store)
 
-    return phoneme_list
+    return new_list
 
 def map_digits(digit):
     new_list = []
