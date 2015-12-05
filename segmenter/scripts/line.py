@@ -18,14 +18,6 @@ import time
 
 package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def delete_images(folder):
-  files_jpg = glob.glob(package_directory + "/" + folder + '/*.jpg')
-  files_png = glob.glob(package_directory + "/" + folder + '/*.png')
-  files_jpg.extend(files_png)
-
-  for filename in files_jpg:
-      os.unlink(filename)
-
 def l_get_base_line_points(ver_hist):
   max_value_index = ver_hist.index(max(ver_hist))
  
@@ -86,15 +78,7 @@ def calc_avg_char_width(character_widths):
 
   return cluster_centers[0][0]  
 
-def segment_lines(im):
-  delete_images('lines')
-  delete_images('figures')
-  delete_images('overlapping_characters')
-  delete_images('single_characters')
-  delete_images('touching_characters')
-  delete_images('touching_characters/segmented')
-  delete_images('final_characters')
-  
+def segment_lines(im):   
 
   # fig2 = plt.figure()
   # sub_plots2 = {}
@@ -289,11 +273,26 @@ def segment_line(bw, line_no):
     resized_characters.append(np.array([0]))
     for j in range(len(words[i])):
       character_width = words[i][j][1] - words[i][j][0]
+
+      cropped_character = bw[0:int(rows), int(words[i][j][0]):int(words[i][j][1])]
+
+      c_rows,c_cols = cropped_character.shape  
+      c_ver_hist = [0]*rows
+      
+      for y_c in xrange(c_rows):
+        for x_c in xrange(c_cols):
+          if cropped_character[y_c,x_c] == 255:
+              c_ver_hist[y_c] += 1
+      
+      c_boundary_lines = get_boundary_line_points(c_ver_hist)
+
+
+      character_height = c_boundary_lines[1] - c_boundary_lines[0]
       
       #ignore smaller character(commas, fullstops)
-      if character_width < average_char_width*0.2:
+      if character_width < average_char_width*0.2 or character_height < average_char_width*0.2:
         continue    
-      cropped_character = bw[0:int(rows), int(words[i][j][0]):int(words[i][j][1])]
+      
       cropped_character_ = cropped_character.copy()
       
       if character_width < average_char_width: 

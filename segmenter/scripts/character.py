@@ -37,14 +37,17 @@ def resize(character, base_lines):
 	base_line_height = base_lines[1] - base_lines[0]
 	top_height = 21
 	bottom_height = 21
-
-	#print base_line_height
+	print rows
+	print cols
+	print base_lines
 
 	height_resize_ratio = 22 /float(base_line_height)    
 	new_height = rows*height_resize_ratio  
 
 	r = float(new_height) / rows
 	dim = (int(cols * r), int(new_height)) 
+
+
 	resized = cv2.resize(character, dim, interpolation = cv2.INTER_NEAREST)
 
 	rows,cols = resized.shape
@@ -87,7 +90,14 @@ def resize(character, base_lines):
 def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines, l_base_lines, category, code):
 	base_lines = l_base_lines[:]
 	
+	base_lines[0] = base_lines[0] - 1
+	#base_lines[1] = base_lines[1] + 5
+	
+	# print l_base_lines
+	# print l_boundary_lines
+	# print boundary_lines
 	character_base_height = l_base_lines[1] - l_base_lines[0]
+	character_height = boundary_lines[1] - boundary_lines[0]
 
 	rows,cols = character.shape 
 
@@ -106,7 +116,7 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 				no_of_contours += 1
 
 	contour_data = sorted(contour_data, key=lambda x: x[0])     
-	print contour_data
+	#print contour_data
 	if len(contour_data) > 1:
 		print "horizontal group"
 		#if top
@@ -124,10 +134,12 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 			print "4"
 			base_lines[0] = contour_data[0][0]
 			base_lines[1] = contour_data[0][1]      
-	else:    
+	else:  		   
 		if boundary_lines[0] > (base_lines[0] - character_base_height*0.3):    
 			base_lines[0] = boundary_lines[0]
-		if boundary_lines[1] < (base_lines[1] + character_base_height*0.2):
+		#else:
+			#base_lines[0] = base_lines[0] - 10
+		if boundary_lines[1] < (base_lines[1] + character_base_height*0.3):
 			base_lines[1] = boundary_lines[1] 
 
 	print base_lines
@@ -156,7 +168,7 @@ def detect_verticle_regions(character, l_base_lines, l_boundary_lines, category,
 	return character, base_lines	
 
 def seg_single_char(character, l_base_lines, l_boundary_lines, category, code):
-	 
+	print code 
 
 	resized_character, region_coordinates = detect_verticle_regions(character, l_base_lines, l_boundary_lines, category, code)
 	
@@ -176,7 +188,7 @@ def seg_single_char(character, l_base_lines, l_boundary_lines, category, code):
 
 def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 	print "overlapping_character"
-
+	print code
 	rows,cols = character.shape
 
 	# character_ = character.copy()
@@ -229,7 +241,7 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 					if l == k:
 						horizontal_groups.append([contour_groups[l]])
 					#detect contour groups belongs to same horizontal character
-					elif (horizontal_groups[-1][0][2])*0.8 > contour_groups[l][0]:
+					elif (horizontal_groups[-1][0][2])*0.9 > contour_groups[l][0]:
 						horizontal_groups[-1].append(contour_groups[l])
 					else:
 						horizontal_groups.append([contour_groups[l]])
@@ -254,8 +266,9 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 		cv2.drawContours(empty_image ,merged_points_list, -1, 255, -1)
 
 		empty_image = empty_image[0:rows, left:right]
-		# empty_image_ = empty_image.copy()
-		# cv2.bitwise_not(empty_image, empty_image_)
+
+		#print len(horizontal_groups)
+
 		if len(horizontal_groups) > 1:
 			character = seg_single_char(empty_image, l_base_lines, l_boundary_lines, "overlapping_characters", code+'_'+str(k))
 		else:
@@ -267,6 +280,7 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 def seg_touching_char(character, l_base_lines, l_boundary_lines, code):  
 	np.set_printoptions(threshold=np.inf)
 	print "touching_character"  
+	print code
 	rows,cols = character.shape 
 
 	t_path = package_directory+'/touching_characters/segmented/'+code
@@ -331,10 +345,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	
 	hull = cv2.convexHull(cnt,returnPoints = False)
 	defects = cv2.convexityDefects(cnt,hull)
-	
-
-	print code
-
+		
 	points = []
 	if defects is not None:
 		for i in range(defects.shape[0]):

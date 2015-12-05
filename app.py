@@ -60,7 +60,7 @@ def upload():
 		
 		output = sinhala_ocr.run(upload_path)
 		
-		return json.dumps({'text':output[0], 'image':output[1], 'audio':output[2]})
+		return json.dumps({'text':output[0], 'words':output[1], 'image':output[2], 'audio':output[3]})
 
 
 if __name__ == "__main__":
