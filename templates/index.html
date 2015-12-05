@@ -35,13 +35,15 @@
 			html = ""
 			text_array.forEach(function(words) {
 				word_html = '<div class="word">'+
-				'<span>'+words[words.length - 1]+'</span>'+
+				'<span>'+words[0]+'</span>'+
 				'<input class="arrow dropbtn" type="image" src="static/images/arrow.png" />'
 			  
 			  dropdown_html = '<div class="dropdown dropdown-content">'
-			  words.forEach(function(words_) {
+			  
+			  words.slice(0, -1).forEach(function(words_) {
 			  	dropdown_html += '<a href="#">'+words_+'</a>'
 			  })
+
 			  dropdown_html += '</div>'
 			  word_html += dropdown_html
 			  word_html += '</div>'
