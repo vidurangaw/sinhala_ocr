@@ -9,7 +9,7 @@ import corrector
 
 # input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලයa ඉහළන්  "
 
-image = cv2.imread('ww4.jpg')
+image = cv2.imread('vv.jpg')
 
 image_bw = segmenter.preprocess(image)
 

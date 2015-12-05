@@ -100,10 +100,9 @@ def validator_char(start, end):
             # print char1
 
 
-            sorted_numpy = prob_match.probability_match(lower=[LowerZoneProb,lowerZoneLabels],
+            predicted_char, lower, middle, upper = prob_match.probability_match(lower=[LowerZoneProb,lowerZoneLabels],
                                                 middle=[MiddleZoneProb, middleZoneLabels],
                                                 upper=[UpperZoneProb,upperZoneLabels])
-            predicted_char, lower, middle, upper, index, index_max=prob_match.ret_match(sorted_numpy, index)
             # char_mapper.char_map()
             input_char= validate_mapper.char_map(i)
             time_end=time.time()
