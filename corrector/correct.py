@@ -6,8 +6,10 @@ import non_word_correct
 import codecs
 import missing_correct
 import operator
+import edit_distance
+import create_output
 
-# input_text=u" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලය ඉහළන්  "
+# input_text=" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලය ඉහළන්  "
 
 def correct(input_text):
 
@@ -27,32 +29,23 @@ def correct(input_text):
     #     test=test.encode('utf-8')
 
 
-    # preprocess.preprocess()
-    non_word_correct.correction(input_text,Correct_word_string,incorrect_word_string,suggestions,unidentified,output)
+    non_word_correct.correction(input_text,Correct_word_string,incorrect_word_string,suggestions,unidentified)
+    print "permutations done"
 
     for item in unidentified:
+        # print item
+        #
+            #
+        if item not in suggestions:
+            # corrected=missing_correct.correct(item.encode('utf-8'))
+            # dic=defaultdict(corrected)
+            corrected=edit_distance.correct(item)
 
-        # print "unidentified: ",item
 
-        corrected=missing_correct.correct(item.encode('utf-8'))
+            suggestions[item]=corrected[item]
+            # print item , "not here"
 
-        suggestions[item]=corrected
-
-    # for item in suggestions.itervalues():
-    #     print '%s' % ' '.join([' '.join('%s' % ''.join(e) for e in item)])
-        # for item in corrected:
-        #     print "s: "+item
-
-        # print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in corrected)])
-
-        # get the chosen word to be added
-        # if len(corrected)==1:
-        #     suggestions[item]=corrected
-
-    # print "\nsuggested"
-    # for item in suggestions.iterkeys():
-    #     print '%s' % ''.join([''.join('%s' % ''.join(e) for e in item)])
-
+    print "edit distances done"
     input_text=input_text.split()
 
 
@@ -66,8 +59,11 @@ def correct(input_text):
              elif input_word in Correct_word_string:
                  output.append(input_word)
              elif input_word in suggestions.iterkeys():
-                 output.append('%s' % ''.join([' , '.join('%s' % ''.join(e) for e in suggestions[input_word])]))
-                 # output.append(suggestions[input_word])
+                 list(suggestions.itervalues())
+                 if suggestions[input_word] is not None and len(suggestions)!=1:
+                    output.append("".join(suggestions[input_word]))
+
+
              else:
                  output.append(input_word)
 
@@ -77,12 +73,11 @@ def correct(input_text):
 
     print "Final : "
 
-    for item in output:
-        print item
+    final_output=create_output.output_function(input_text,output)
+    # grammar_correction.sinhala_grammar_rules(output)
 
-    # output = '%s' % ''.join([' '.join('%s' % ''.join(e) for e in output)])
-    # print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in output)])
-    return output
+    return final_output
 
 
-# main(input_text)
+
+# correct(input_text)

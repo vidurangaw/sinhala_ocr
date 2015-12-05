@@ -5,13 +5,15 @@ import codecs
 from collections import Counter
 import os
 
+
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
-def correction(input_string, Correct_word_string,incorrect_word_string,suggestions,unidentified,output):
+ff = open('corrector/permutations.txt', 'w')
 
-    # output=[]
-    # unidentified=[]
-    
+def correction(input_string, Correct_word_string,incorrect_word_string,suggestions,unidentified):
+
+
+
     text = codecs.open('corrector/outfile.txt', encoding='utf-8')
     text2 = text.read()
     text2 = text2.replace(',',' ').replace('.',' ').replace('?',' ').split()
@@ -24,19 +26,15 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
     initProbs = {c: counts[c] / float(sumv) for c in counts}
     probs={}
 
+    print "probabilities calculated"
     dictionary = codecs.open('corrector/dictionary.txt', encoding='utf-8')
     dictionary = dictionary.read()
     file=open('corrector/permutations.txt','w')
-    # print dictionary.encode('utf-8')
 
-    # Correct_word_string = []
-    # incorrect_word_string = []
     character_set = []
-    # suggestions={}
 
-    # if manual input for testing
 
-    # input_string = u" සංවිටානවලිනුත් ඉල්ලා සිවින"
+
     input_string = input_string.split()
 
 
@@ -66,7 +64,7 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
     character_list8 = ['කූ','ගූ','ශු','කු','තු','ඥ','තූ','ගු','ඤ']
     character_list8 = [x.decode('UTF8') for x in character_list8]
 
-    character_list9 = ['පු','සු','දු']
+    character_list9 = ['පු','සු','දු','යු']
     character_list9 = [x.decode('UTF8') for x in character_list9]
 
     character_list10 = ['ඛ','ධ','බ','ඩ']
@@ -79,50 +77,54 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
         #     Correct_word_string.append(input_word)
         if input_word in dictionary:
             correct_word = input_word
-
+            print "correct",correct_word
+            Correct_word_string.append(correct_word)
+        elif input_word.isdigit()==True:
+            correct_word=input_word
+            print "correct",correct_word
+            Correct_word_string.append(correct_word)
+        elif input_word.isalpha()==True:
+            correct_word=input_word
+            print "correct",correct_word
             Correct_word_string.append(correct_word)
 
 
         else:
             incorrect_word = input_word
-            checkfamily(input_word,character_set,suggestions,initProbs,probs,All_characters)
+
+            checkfamily(incorrect_word,character_set,suggestions,initProbs,probs,All_characters)
 
             incorrect_word_string.append(incorrect_word)
 
     # return Correct_word_string
 
-
-
-
-    correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions,input_string,output,unidentified)
+    correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions,input_string,unidentified)
 
     # print "Corrected : "
     # print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in output)])
 
-    print "to be corrected : "
-    print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in unidentified)])
-
-    return output,unidentified
 
 
-def correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions ,input_string,output,unidentified):
-    Corrected_word_string = unicode(" ").join(Correct_word_string)
+    return unidentified
 
-    # print "verified word string is : "
-    # print Corrected_word_string.encode('utf-8')
 
+def correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions ,input_string,unidentified):
+    # Corrected_word_string = unicode(" ").join(Correct_word_string)
 
 
     for input_word in input_string:
         # for incorrect , correct in suggestions.iteritems():
-            if input_word not in Correct_word_string or input_word not in suggestions.iterkeys() and input_word.isalpha()==False  or input_word.isdigit()==False:
-        #          output.append(input_word)
-             # elif input_word in suggestions.iterkeys():
-             #     output.append(suggestions[input_word])
+            if input_word not in Correct_word_string:
+                unidentified.append(input_word)
 
-                 unidentified.append(input_word)
 
-    # return Correct_word_string
+    # for item in unidentified:
+    #     print "unidentified" , item
+
+
+    print "to be corrected : "
+    print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in unidentified)])
+    return unidentified
 
     # print output
 
@@ -133,11 +135,10 @@ def checkfamily(text,character_set,suggestions,initProbs,probs,All_characters):
             character_set.append(tuple)
 
 
-    ff = open('permutations.txt', 'w')
+
 
 
     permutations = []
-
 
     for atuple in character_set:
 
@@ -145,23 +146,26 @@ def checkfamily(text,character_set,suggestions,initProbs,probs,All_characters):
         for c in text:
             if (c in atuple):
                for x in atuple:
-
+                # if x in text:
                    text_rev = text.replace(c, x)
+                   permutations.append(text_rev)
+                   text_rev=text_rev.replace(c,x)
+                   permutations.append(text_rev)
+                   # text_rev=text_rev.replace(c,x)
+                   # permutations.append(text_rev)
+                   # text_rev=text_rev.replace(c,x)
+                   # permutations.append(text_rev)
 
-                   if text_rev!=None:
-                        permutations.append(text_rev)
-                        ff.write(text_rev.encode('utf-8'))
-                        ff.write(" , ")
-                        for name, prob in initProbs.iteritems():
-                            if name == text_rev:
-                                probs[text_rev]=prob
-                                suggestions[text]=text_rev
+    for name, prob in initProbs.iteritems():
+        for item in permutations:
+            if name == item:
+                probs[item]=prob
+                suggestions[text]=item
 
-    # for key in probs.iterkeys():
-    #     print "corrected words" , key
 
-    # for incorrect , correct in suggestions.iteritems():
-    #     print incorrect ," : " , correct
+    for item in permutations:
+        ff.write(item.encode('utf-8'))
+
 
     return suggestions
 
@@ -170,3 +174,5 @@ def checkfamily(text,character_set,suggestions,initProbs,probs,All_characters):
 #     correction(input_string)
 #
 # main()
+
+# ff.close()

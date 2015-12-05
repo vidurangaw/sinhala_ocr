@@ -3,21 +3,36 @@ __author__ = 'Amali Rathnapriya'
 import codecs
 import sys
 import os
+import StringIO
+import glob
 
 from collections import Counter
 
-# def create_outfile():
-#     corpus_root = 'D:/Corpus/Corpus/SINHALACORPUS/NEWSPAPERS/'
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
+# def create_outfile():
+corpus_root = 'D:/Corpus/Corpus/SINHALACORPUS/NEWSPAPERS'
+
+
 def preprocess():
 
 
 
     oldstdout = sys.stdout
-    print ("text preprocessing started")
+    # joined=open('outfile.txt','w')
+    # for root, dirs, files in os.walk(corpus_root):
+    #     for file in files:
+    #         if file.endswith(".TXT"):
+    #             # print(os.path.join(root, file))
+    #             # files=glob.glob(corpus_root)
+    #             # for file in files:
+    #                 f=open(file, 'r')
+    #                 f.readlines()
+    #                 f.close()
 
-    #create a unique words dictionary from the corpus
+
+
+   #create a unique words dictionary from the corpus
 
     text=codecs.open('outfile.txt',encoding='utf-8')
     text2 = text.read()
