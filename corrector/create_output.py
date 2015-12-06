@@ -22,7 +22,7 @@ def output_function(inputp,outputp):
         for key, value in final_output.iteritems():
             if key==input:
                 temp = [value, key]
-                temp=",".join(temp)
+                # temp=",".join(temp)
                 dictlist.append(temp)
 
 
