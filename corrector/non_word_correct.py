@@ -8,7 +8,6 @@ import os
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
-ff = open('corrector/permutations.txt', 'w')
 
 def correction(input_string, Correct_word_string,incorrect_word_string,suggestions,unidentified):
 
@@ -149,8 +148,13 @@ def checkfamily(text,character_set,suggestions,initProbs,probs,All_characters):
                 # if x in text:
                    text_rev = text.replace(c, x)
                    permutations.append(text_rev)
-                   text_rev=text_rev.replace(c,x)
-                   permutations.append(text_rev)
+                   # for atuple2 in character_set:
+                   for c2 in text_rev:
+                       if (c2 in atuple):
+                           for x2 in atuple:
+
+                            text_rev2=text_rev.replace(c2,x2)
+                            permutations.append(text_rev2)
                    # text_rev=text_rev.replace(c,x)
                    # permutations.append(text_rev)
                    # text_rev=text_rev.replace(c,x)
@@ -159,12 +163,17 @@ def checkfamily(text,character_set,suggestions,initProbs,probs,All_characters):
     for name, prob in initProbs.iteritems():
         for item in permutations:
             if name == item:
+                # print item
                 probs[item]=prob
-                suggestions[text]=item
+                correction=item
+                suggestions[text].append(correction)
+                break
 
 
-    for item in permutations:
-        ff.write(item.encode('utf-8'))
+
+
+    # for item in permutations:
+    #     ff.write(item.encode('utf-8'))
 
 
     return suggestions
