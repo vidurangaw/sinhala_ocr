@@ -8,7 +8,7 @@ import corrector
 # import synthesizer
 
 # input_text=" රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටියරී වර පසින් ඇහ් අ "
-input_text="රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටියරී වර පසින් ඇහ් අ"
+input_text="රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටිය වර පසින් ඇහ් අ මිනාගය සංමිටානය නඳුවැටිය"
 
 corrected_text = corrector.correct(input_text)
 # corrected_text=corrected_text.split(" ")
