@@ -30,6 +30,7 @@ def output_function(inputp,outputp):
                     words.append(value)
                     words.append(key)
                 else:
+                    value=value[::-1]
                     words.extend(value)
                     words.append(key)
 
