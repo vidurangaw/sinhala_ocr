@@ -24,7 +24,7 @@ graphemes = {
 
 phonemes = {"a" : "a",      "aa" : "aa",    "ae" : "ae",        "aee" : "aee",      "i" : "i",          "ii" : "ii",    "u" : "u",
             "uu" : "uu",     "iru" : "iru",  "iruu" : "iruu",    "ilu" : "ilu",      "iluu" : "iluu",    "e" : "e",      "ee" : "ee",
-            "ai" : "ai",    "o" : "o",      "oo" : "oo",        "au" : "au",        "aM_Ang" : "ang",     "aM_Angg" : "a",
+            "ai" : "ai",    "o" : "o",      "oo" : "oo",        "au" : "au",        "aM_Ang" : "ang",     "aM_Angg" : "a", "M_Ang" : "ng",
 
             "a_" : "a",      "aa_" : "aa",    "ae_" : "ae",        "aee_" : "aee",      "i_" : "i",          "ii_" : "ii",    "u_" : "u",
             "u_" : "uu",     "iru_" : "iru",  "iruu_" : "iruu",    "ilu_" : "ilu",      "iluu_" : "iluu",    "e_" : "e",      "ee_" : "ee",
@@ -226,8 +226,8 @@ sounds = {"a" : "sounds/characters/00 - vowels/01 - a.wav",         "aa" : "soun
           "tang" : "sounds/characters/05 - t/15 - tang.wav",    "tru" : "sounds/characters/05 - t/16 - tru.wav",
           "truu" : "sounds/characters/05 - t/17 - truu.wav",
 
-          "d" : "sounds/characters/06 - d/00 - d.wav",          "da" : "sounds/characters/06 - d/06 - da.wav",
-          "da_" : "sounds/characters/06 - d/06 - da2.wav",      "daa" : "sounds/characters/06 - d/02 - daa.wav",
+          "d" : "sounds/characters/06 - d/00 - d.wav",          "da" : "sounds/characters/06 - d/01 - da.wav",
+          "da_" : "sounds/characters/06 - d/01 - da2.wav",      "daa" : "sounds/characters/06 - d/02 - daa.wav",
           "dae" : "sounds/characters/06 - d/03 - dae.wav",      "daee" : "sounds/characters/06 - d/04 - daee.wav",
           "di" : "sounds/characters/06 - d/05 - di.wav",        "dii" : "sounds/characters/06 - d/06 - dii.wav",
           "du" : "sounds/characters/06 - d/07 - du.wav",        "duu" : "sounds/characters/06 - d/08 - duu.wav",
@@ -393,6 +393,7 @@ sounds = {"a" : "sounds/characters/00 - vowels/01 - a.wav",         "aa" : "soun
           "nnga" : "sounds/characters/nnga.wav",        "nnda" : "sounds/characters/nnda.wav",
           "nndha" : "sounds/characters/nndha.wav",      "nnja" : "sounds/characters/nnja.wav",
           "mmba" : "sounds/characters/mmba.wav",        "nnya" : "sounds/characters/nnya.wav",
+          "ng" : "sounds/characters/ng.wav",
 
           " " : "sounds/characters/null.wav",       "." : "sounds/characters/null2.wav",
           "?" : "sounds/characters/null2.wav",      "," : "sounds/characters/null.wav",
