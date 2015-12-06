@@ -14,10 +14,10 @@ corrected_text = corrector.correct(input_text)
 # corrected_text=corrected_text.split(" ")
 # print( corrected_text)
 
-print corrected_text
+#print corrected_text
 
 
-# print '%s' % ''.join([' , '.join('%s' % ' '.join(e) for e in corrected_text)])
+print '%s' % ''.join([' , '.join('%s' % ' '.join(e) for e in corrected_text)])
 
 # corrected_text = corrector.correct(classified_text)
 #print "corrected text : " + corrected_text

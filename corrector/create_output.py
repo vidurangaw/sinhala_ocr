@@ -21,14 +21,27 @@ def output_function(inputp,outputp):
    for input in inputp:
         for key, value in final_output.iteritems():
             if key==input:
+
+                print key.encode("utf-8")
                 print "correctedd"
                 print value
-                if value != "":
-                    temp = [value, key]
+
+                words = []
+
+                if not value:
+                    print "G"
+                    words.append(key)
+                elif isinstance(value, basestring):
+                    words.append(value)
+                    words.append(key)
                 else:
-                    temp=[key]
+                    words.extend(value)
+                    words.append(key)
+
                 # temp=",".join(temp)
-                dictlist.append(temp)
+
+                print words
+                dictlist.append(words)
 
 
    return dictlist
