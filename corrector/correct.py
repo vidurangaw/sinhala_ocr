@@ -79,7 +79,7 @@ def correct(input_text):
 
 
     # final_output=grammar_correct.sinhala_grammar_rules(output)
-    return '%s' % ''.join(['\n'.join('%s' % ''.join(e) for e in final_output)])
+    return final_output
 
 
 
