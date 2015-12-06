@@ -21,7 +21,12 @@ def output_function(inputp,outputp):
    for input in inputp:
         for key, value in final_output.iteritems():
             if key==input:
-                temp = [value, key]
+                print "correctedd"
+                print value
+                if value != "":
+                    temp = [value, key]
+                else:
+                    temp=[key]
                 # temp=",".join(temp)
                 dictlist.append(temp)
 
