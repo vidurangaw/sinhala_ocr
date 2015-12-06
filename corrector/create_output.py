@@ -21,15 +21,10 @@ def output_function(inputp,outputp):
    for input in inputp:
         for key, value in final_output.iteritems():
             if key==input:
-
-                print key.encode("utf-8")
-                print "correctedd"
-                print value
-
+               
                 words = []
 
-                if not value:
-                    print "G"
+                if not value:                 
                     words.append(key)
                 elif isinstance(value, basestring):
                     words.append(value)
@@ -38,9 +33,6 @@ def output_function(inputp,outputp):
                     words.extend(value)
                     words.append(key)
 
-                # temp=",".join(temp)
-
-                print words
                 dictlist.append(words)
 
 
