@@ -61,8 +61,8 @@ def correct(input_text):
                  output.append(input_word)
              elif input_word in suggestions.iterkeys():
                  # list(suggestions.itervalues())
-                 if suggestions[input_word]!=[] and len([item for item in suggestions if item])!=1 :
-                    output.append(suggestions[input_word])
+                 # if suggestions[input_word]!=[] and len([item for item in suggestions if item])!=1 :
+                 output.append(suggestions[input_word])
 
 
              else:
