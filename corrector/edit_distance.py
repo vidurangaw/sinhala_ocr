@@ -112,30 +112,30 @@ def correct(input_string):
     TARGET = item
     print "\n",(TARGET),"............"
     if item.__len__()==1 or item.__len__()==2:
-            results = search( TARGET, 0 )
-            for result in results:
-                suggestion=result
+                results = search( TARGET, 0 )
+            # for result in results:
+                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print "".join(suggestion)
+                print (suggestion)
     elif item.__len__()==3 or item.__len__()==4:
-            results=search(TARGET,1)
-            for result in results:
-                suggestion=result
+                results=search(TARGET,1)
+            # for result in results:
+                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print "".join(suggestion)
+                print (suggestion)
     elif item.__len__()==5:
             # results=search(TARGET,2)
-            results=search(TARGET,1)
-            for result in results:
-                suggestion=result
+                results=search(TARGET,1)
+            # for result in results:
+                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print "".join(suggestion)
+                print (suggestion)
     else:
-        results=search(TARGET,2)
-        for result in results:
-                suggestion=result
+                results=search(TARGET,2)
+        # for result in results:
+                suggestion='%s' % ''.join([' '.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print "".join(suggestion)
+                print (suggestion)
 
 
 
@@ -148,8 +148,8 @@ def correct(input_string):
     #
     #         results_final=results_final.append(item)
 
-    results="".join(results[:4])
-    correction[item]=results.split(" , ")
+    results=results[:4]
+    correction=results
     print "Search took %g s" % (end - start)
 
     return correction
