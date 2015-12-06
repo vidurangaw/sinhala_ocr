@@ -18,27 +18,15 @@ def output_function(inputp,outputp):
    #    print incorrect ," : " , correct
 
    dictlist=[]
-   for key, value in final_output.iteritems():
-        temp = [value, key]
-        #temp="".join(temp)
-        dictlist.append(temp)
+   for input in inputp:
+        for key, value in final_output.iteritems():
+            if key==input:
+                temp = [value, key]
+                temp=",".join(temp)
+                dictlist.append(temp)
 
-   # for item in dictlist:
-   #     print(" , ".join(item))
-   #
-   # print dictlist
-
-
-   # fp.write(s.encode('utf-8'))
 
    return dictlist
 
 
 
-# def main():
-#
-#     inputp=u"තන්විධනය දෙඉශක"
-#     outputp=[u"සංවිධානය",[u"දේශන ,දේශය"]]
-#     output_function(inputp,outputp)
-#
-# main()
