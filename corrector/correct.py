@@ -8,18 +8,19 @@ import missing_correct
 import operator
 import edit_distance
 import create_output
-
+import grammar_correct
+from collections import  defaultdict
 # input_text=" සංවිටාතවලිනුක්, 123 ඉල්ලා සිවින? amali ග�තක් කො�ඹ ඡලය ඉහළන්  "
 
 def correct(input_text):
 
     Correct_word_string = []
     incorrect_word_string = []
-    suggestions={}
+    # suggestions=[]
     unidentified=[]
     output=[]
     edit_distances={}
-
+    suggestions=defaultdict(list)
 
     input_text = input_text.decode("utf-8")
 
@@ -42,7 +43,7 @@ def correct(input_text):
             corrected=edit_distance.correct(item)
 
 
-            suggestions[item]=corrected[item]
+            suggestions[item]=corrected
             # print item , "not here"
 
     print "edit distances done"
@@ -59,9 +60,9 @@ def correct(input_text):
              elif input_word in Correct_word_string:
                  output.append(input_word)
              elif input_word in suggestions.iterkeys():
-                 list(suggestions.itervalues())
-                 if suggestions[input_word] is not None and len(suggestions)!=1:
-                    output.append("".join(suggestions[input_word]))
+                 # list(suggestions.itervalues())
+                 if suggestions[input_word] is not None and len([item for item in suggestions if item])!=1 :
+                    output.append(",".join(suggestions[input_word]))
 
 
              else:
@@ -76,7 +77,9 @@ def correct(input_text):
     final_output=create_output.output_function(input_text,output)
     # grammar_correction.sinhala_grammar_rules(output)
 
-    return final_output
+
+    # final_output=grammar_correct.sinhala_grammar_rules(output)
+    return '%s' % ''.join(['\n'.join('%s' % ''.join(e) for e in final_output)])
 
 
 
