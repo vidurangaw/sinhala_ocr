@@ -113,29 +113,37 @@ def correct(input_string):
     print "\n",(TARGET),"............"
     if item.__len__()==1 or item.__len__()==2:
                 results = search( TARGET, 0 )
+                if results is not None:
             # for result in results:
-                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
+            #     suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
+                    suggestion=results
                 # if suggestion!=None:
-                print (suggestion)
+                    print (suggestion)
     elif item.__len__()==3 or item.__len__()==4:
                 results=search(TARGET,1)
+                if results is not None:
             # for result in results:
-                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
+                    suggestion=results
+            #     suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print (suggestion)
+                    print (suggestion)
     elif item.__len__()==5:
             # results=search(TARGET,2)
                 results=search(TARGET,1)
+                if results is not None:
             # for result in results:
-                suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
+                    suggestion=results
+            #     suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print (suggestion)
+                    print (suggestion)
     else:
                 results=search(TARGET,2)
+                if results is not None:
         # for result in results:
-                suggestion='%s' % ''.join([' '.join('%s' % ''.join(e) for e in results)])
+                    suggestion=results
+        #         suggestion='%s' % ''.join([' '.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
-                print (suggestion)
+                    print (suggestion)
 
 
 
