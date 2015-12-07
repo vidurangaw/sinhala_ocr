@@ -14,9 +14,12 @@ def generate_audio(phoneme_list):
     data=[]
 
     for i in phoneme_list:
-        w = wave.open(package_directory + "/" + dictionary.sounds[i], 'rb')
-        data.append([w.getparams(), w.readframes(w.getnframes())])
-        w.close()
+        try:
+            w = wave.open(package_directory + "/" + dictionary.sounds[i], 'rb')
+            data.append([w.getparams(), w.readframes(w.getnframes())])
+            w.close()
+        except KeyError:
+            continue
 
     output = wave.open(outfile, 'wb')
     output.setparams(data[0][0])

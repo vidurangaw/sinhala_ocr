@@ -8,18 +8,21 @@ def map_graphemes(characters):
     digit = ''
 
     for i in range(0, len(characters), 1):
-        if (characters[i]==' ' or characters[i]=='.' or characters[i]==',' or characters[i]=='?' or characters[i]=='!'):
-            if (digit != ''):
-                grapheme_list.append(digit)
-                digit = ''
-            grapheme_list.append(characters[i])
-        elif (characters[i].isdigit()):
-            digit = digit + characters[i]
-        else:
-            if (digit != ''):
-                grapheme_list.append(digit)
-                digit = ''
-            grapheme_list.append(dictionary.graphemes[characters[i]])
+        try:
+            if (characters[i]==' ' or characters[i]=='.' or characters[i]==',' or characters[i]=='?' or characters[i]=='!'):
+                if (digit != ''):
+                    grapheme_list.append(digit)
+                    digit = ''
+                grapheme_list.append(characters[i])
+            elif (characters[i].isdigit()):
+                digit = digit + characters[i]
+            else:
+                if (digit != ''):
+                    grapheme_list.append(digit)
+                    digit = ''
+                grapheme_list.append(dictionary.graphemes[characters[i]])
+        except KeyError:
+            continue
 
     return grapheme_list
 
