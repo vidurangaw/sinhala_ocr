@@ -129,15 +129,23 @@ def correct(input_string):
                     print (suggestion)
     elif item.__len__()==5:
             # results=search(TARGET,2)
-                results=search(TARGET,1)
+                results=search(TARGET,2)
                 if results is not None:
             # for result in results:
                     suggestion=results
             #     suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:
                     print (suggestion)
-    else:
+    elif item.__len__()==6:
                 results=search(TARGET,2)
+                if results is not None:
+        # for result in results:
+                    suggestion=results
+        #         suggestion='%s' % ''.join([' '.join('%s' % ''.join(e) for e in results)])
+                # if suggestion!=None:
+                    print (suggestion)
+    else:
+                results=search(TARGET,3)
                 if results is not None:
         # for result in results:
                     suggestion=results
