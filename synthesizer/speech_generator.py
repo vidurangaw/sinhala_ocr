@@ -28,16 +28,6 @@ def generate_audio(phoneme_list):
         output.writeframes(data[i][1])
 
     output.close()
-
-    # audio = wave.open(outfile, 'rb')
-    # rate = audio.getframerate()
-    # rate2 = audio.getparams()
-    # audio.close()
-    # audio2 = wave.open(outfile, 'wb')
-    # audio2.setframerate(2*rate)
-    # audio2.setparams(rate2)
-    # audio2.close()
-
     return data
 
 def generate_audio2():

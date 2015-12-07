@@ -4,6 +4,7 @@ import text_reader
 import grapheme_mapper
 import phoneme_mapper
 import speech_generator
+import sound_corrector
 
 # file = open('input/input_text.txt', 'r')
 # raw_text = file.read()
@@ -22,6 +23,7 @@ def synthesize(text):
     print phoneme_list
 
     return speech_generator.generate_audio(phoneme_list)
+    sound_corrector.correct_audio()
 
 #synthesize(text)
 

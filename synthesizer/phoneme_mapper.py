@@ -30,11 +30,12 @@ def map_phonemes(grapheme_list):
                 else:
                     phoneme_list.append(dictionary.phonemes[grapheme_list[i] + '_'])
             elif (grapheme_list[i].find('M')!= -1):
-                last = phoneme_list.pop()
-                if (last.find('_')!= -1):
-                    phoneme_list.append(dictionary.phonemes[last[:-1] + grapheme_list[i]])
-                else:
-                    phoneme_list.append(dictionary.phonemes[last + grapheme_list[i]])
+                if (i>0):
+                    last = phoneme_list.pop()
+                    if (last.find('_')!= -1):
+                        phoneme_list.append(dictionary.phonemes[last[:-1] + grapheme_list[i]])
+                    else:
+                        phoneme_list.append(dictionary.phonemes[last + grapheme_list[i]])
         except KeyError:
             continue
 
