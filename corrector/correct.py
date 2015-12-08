@@ -77,8 +77,6 @@ def correct(input_text):
     final_output=create_output.output_function(input_text,output)
     # grammar_correction.sinhala_grammar_rules(output)
 
-
-    # final_output=grammar_correct.sinhala_grammar_rules(output)
     return final_output
 
 

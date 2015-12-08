@@ -23,7 +23,7 @@ def output_function(inputp,outputp):
             if key==input:
 
                 print key.encode("utf-8")
-                print "correctedd"
+                # print "correctedd"
                 print value
 
                 words = []
