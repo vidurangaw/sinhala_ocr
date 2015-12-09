@@ -9,7 +9,7 @@ import os
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
 
-def correction(input_string, Correct_word_string,incorrect_word_string,suggestions,unidentified):
+def correction(input_list, Correct_word_string,incorrect_word_string,suggestions,unidentified):
 
 
 
@@ -34,7 +34,7 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
 
 
 
-    input_string = input_string.split()
+#    input_string = input_string.split()
 
 
     # similar grapheme families defined
@@ -71,7 +71,7 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
 
     All_characters=[character_list1,character_list2,character_list3,character_list4,character_list5,character_list6,character_list6,character_list7,character_list8,character_list9,character_list10]
 
-    for input_word in input_string:
+    for input_word in input_list:
         # if input_word.isdigit():
         #     Correct_word_string.append(input_word)
         if input_word in dictionary:
@@ -97,7 +97,7 @@ def correction(input_string, Correct_word_string,incorrect_word_string,suggestio
 
     # return Correct_word_string
 
-    correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions,input_string,unidentified)
+    correct_word_string_generate(Correct_word_string,incorrect_word_string,suggestions,input_list,unidentified)
 
     # print "Corrected : "
     # print '%s' % ''.join([' '.join('%s' % ''.join(e) for e in output)])

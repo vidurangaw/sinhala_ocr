@@ -22,15 +22,16 @@ def correct(input_text):
     edit_distances={}
     suggestions=defaultdict(list)
 
-    input_text = input_text.decode("utf-8")
+    print input_text
 
+    input_text = input_text.decode("utf-8")
 
     input_text=input_text.replace(',',' ').replace('.',' ').replace('?',' ').replace('!',' ')
     # for test in text:
     #     test=test.encode('utf-8')
+    input_words=input_text.split()
 
-
-    non_word_correct.correction(input_text,Correct_word_string,incorrect_word_string,suggestions,unidentified)
+    non_word_correct.correction(input_words,Correct_word_string,incorrect_word_string,suggestions,unidentified)
     print "permutations done"
 
     for item in unidentified:
@@ -47,10 +48,8 @@ def correct(input_text):
             # print item , "not here"
 
     print "edit distances done"
-    input_text=input_text.split()
 
-
-    for input_word in input_text:
+    for input_word in input_words:
              # print input_word
         # for incorrect , correct in suggestions.iteritems():
              if input_word.isdigit():
@@ -68,19 +67,13 @@ def correct(input_text):
              else:
                  output.append(input_word)
 
-
-
-
-
     print "Final : "
 
-    final_output=create_output.output_function(input_text,output)
+    final_output=create_output.output_function(input_words,output)
     # grammar_correction.sinhala_grammar_rules(output)
 
 
     # final_output=grammar_correct.sinhala_grammar_rules(output)
     return '%s' % ''.join(['\n'.join('%s' % ''.join(e) for e in final_output)])
-
-
 
 # correct(input_text)

@@ -8,7 +8,7 @@ package_directory = os.path.dirname(os.path.abspath(__file__))
 def correct_audio():
     CHANNELS = 1
     swidth = 2
-    Change_RATE = 2.25
+    Change_RATE = 2
 
     spf = wave.open(package_directory + "/output/output_audio.wav", 'rb')
     RATE=spf.getframerate()
@@ -20,3 +20,5 @@ def correct_audio():
     wf.setframerate(RATE*Change_RATE)
     wf.writeframes(signal)
     wf.close()
+
+    print "audio corrected"
