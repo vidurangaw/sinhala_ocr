@@ -22,9 +22,7 @@ DICTIONARY =('corrector/dictionary.txt')
 NodeCount = 0
 WordCount = 0
 
-# The Trie data structure keeps a set of words, organized with one node for
-# each letter. Each node has a branch for each letter that may follow it in the
-# set of words.
+
 class TrieNode:
     def __init__(self):
         self.word = None
@@ -51,8 +49,7 @@ for word in codecs.open(DICTIONARY,encoding='utf-8').read().split():
 
 print "Read %d words into %d nodes" % (WordCount, NodeCount)
 
-# The search function returns a list of all words that are less than the given
-# maximum distance from the target word
+
 def search( word, maxCost ):
 
     # build first row
@@ -67,15 +64,13 @@ def search( word, maxCost ):
 
     return results
 
-# This recursive helper is used by the search function above. It assumes that
-# the previousRow has been filled in already.
+
 def searchRecursive( node, letter, word, previousRow, results, maxCost ):
 
     columns = len( word ) + 1
     currentRow = [ previousRow[0] + 1 ]
 
-    # Build one row for the letter, with a column for each letter in the target
-    # word, plus one for the empty string at column 0
+
     for column in xrange( 1, columns ):
 
         insertCost = currentRow[column - 1] + 1
@@ -88,13 +83,11 @@ def searchRecursive( node, letter, word, previousRow, results, maxCost ):
 
         currentRow.append( min(replaceCost,insertCost,deleteCost) ) #can add insertCOst and deleteCost  as min( replaceCost, deleteCost, insertCost)
 
-    # if the last entry in the row indicates the optimal cost is less than the
-    # maximum cost, and there is a word in this trie node, then add it.
+
     if currentRow[-1] <= maxCost and node.word != None:
         results.append( node.word )
 
-    # if any entries in the row are less than the maximum cost, then
-    # recursively search each branch of the trie
+    # if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
     if min( currentRow ) <= maxCost:
         for letter in node.children:
             searchRecursive( node.children[letter], letter, word, currentRow,
@@ -130,8 +123,11 @@ def correct(input_string):
     elif item.__len__()==5:
             # results=search(TARGET,2)
                 results=search(TARGET,2)
-                if results is not None:
+                if results !=[]:
             # for result in results:
+                    suggestion=results
+                else:
+                    results=search(TARGET,4)
                     suggestion=results
             #     suggestion='%s' % ''.join([''.join('%s' % ''.join(e) for e in results)])
                 # if suggestion!=None:

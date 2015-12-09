@@ -21,7 +21,7 @@ def output_function(inputp,outputp):
    for input in inputp:
         for key, value in final_output.iteritems():
             if key==input:
-               
+
                 words = []
 
                 if not value:                 
