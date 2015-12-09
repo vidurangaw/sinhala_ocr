@@ -80,23 +80,23 @@ def classify(img):
         # UpperZoneClass=(classifier_upper(dataArray_upper, Orange.classification.Classifier.GetBoth))
         # LowerZoneClass=(classifier_lower(dataArray_lower, Orange.classification.Classifier.GetBoth))
 
-        ################################################
-        # if classifier_lower(dataArray_lower, Orange.classification.Classifier.GetValue) == 'l0':
-        #
-        #     for i in range(0, len(lowerZoneLabels)):
-        #        lowerZoneLabels[i] = 'l0'
-        #
-        #     for i in xrange(0, len(LowerZoneProb)):
-        #        LowerZoneProb[i] = 1
-        #
-        #
-        # if classifier_upper(dataArray_upper, Orange.classification.Classifier.GetValue) == 'u0':
-        #
-        #     for i in range(0, len(upperZoneLabels)):
-        #        upperZoneLabels[i] = 'u0'
-        #
-        #     for i in xrange(0, len(UpperZoneProb)):
-        #        UpperZoneProb[i] = 1
+        ###############################################
+        if classifier_lower(dataArray_lower, Orange.classification.Classifier.GetValue) == 'l0':
+        
+            for i in range(0, len(lowerZoneLabels)):
+               lowerZoneLabels[i] = 'l0'
+        
+            for i in xrange(0, len(LowerZoneProb)):
+               LowerZoneProb[i] = 1
+        
+        
+        if classifier_upper(dataArray_upper, Orange.classification.Classifier.GetValue) == 'u0':
+        
+            for i in range(0, len(upperZoneLabels)):
+               upperZoneLabels[i] = 'u0'
+        
+            for i in xrange(0, len(UpperZoneProb)):
+               UpperZoneProb[i] = 1
 
         predicted_char, lower, middle, upper = prob_match.probability_match(lower=[LowerZoneProb,lowerZoneLabels],
                                                 middle=[MiddleZoneProb, middleZoneLabels],
