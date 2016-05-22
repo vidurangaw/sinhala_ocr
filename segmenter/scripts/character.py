@@ -25,12 +25,12 @@ import time
 
 package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-fig4 = plt.figure()
-sub_plots4 = {}
+#fig4 = plt.figure()
+#sub_plots4 = {}
 
-sub_plots4["0"] = fig4.add_subplot(211)
-sub_plots4["1"] = fig4.add_subplot(212)
-sub_plots4["1"].invert_yaxis()
+# sub_plots4["0"] = fig4.add_subplot(211)
+# sub_plots4["1"] = fig4.add_subplot(212)
+#sub_plots4["1"].invert_yaxis()
 
 def resize(character, base_lines): 
 	rows,cols = character.shape  
@@ -39,7 +39,7 @@ def resize(character, base_lines):
 	bottom_height = 21
 	print rows
 	print cols
-	print base_lines
+	#print base_lines
 
 	height_resize_ratio = 22 /float(base_line_height)    
 	new_height = rows*height_resize_ratio  
@@ -90,12 +90,14 @@ def resize(character, base_lines):
 def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines, l_base_lines, category, code):
 	base_lines = l_base_lines[:]
 	
-	base_lines[0] = base_lines[0] - 1
+	base_lines[0] = base_lines[0] - 5
 	#base_lines[1] = base_lines[1] + 5
 	
 	# print l_base_lines
 	# print l_boundary_lines
-	# print boundary_lines
+	#print boundary_lines
+	#print l_base_lines
+
 	character_base_height = l_base_lines[1] - l_base_lines[0]
 	character_height = boundary_lines[1] - boundary_lines[0]
 
@@ -141,6 +143,10 @@ def char_base_line_points(character, ver_hist, boundary_lines, l_boundary_lines,
 			#base_lines[0] = base_lines[0] - 10
 		if boundary_lines[1] < (base_lines[1] + character_base_height*0.3):
 			base_lines[1] = boundary_lines[1] 
+
+	if base_lines[0] > base_lines[1]:
+		base_lines[0] = boundary_lines[0]
+		base_lines[1] = boundary_lines[1] 
 
 	print base_lines
 
@@ -191,6 +197,8 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 	print code
 	rows,cols = character.shape
 
+	print rows
+	print cols
 	# character_ = character.copy()
 
 	# cv2.bitwise_not(character, character_)
@@ -224,9 +232,9 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 		right = left + width
 		bottom = top + height
 		# remove small objects
-		if width > 3:
+		if width > 8 and height > 8:
 			contour_groups.append([left,top,right,bottom, merged_points_list])
-	
+		
 
 	#re-order contour groups according their starting point
 	contour_groups = sorted(contour_groups, key=lambda x: x[0])
@@ -241,13 +249,15 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 					if l == k:
 						horizontal_groups.append([contour_groups[l]])
 					#detect contour groups belongs to same horizontal character
-					elif (horizontal_groups[-1][0][2])*0.9 > contour_groups[l][0]:
+					elif (horizontal_groups[-1][0][2])*0.8 > contour_groups[l][0]:
 						horizontal_groups[-1].append(contour_groups[l])
 					else:
 						horizontal_groups.append([contour_groups[l]])
 					already_included.append(l)  
  
 	resized_characters = []    
+
+	print "horizontal_groups : " + str(len(horizontal_groups))
 
 	for k in range(len(horizontal_groups)):    
 		empty_image = np.zeros((rows,cols,1), np.uint8)
@@ -267,7 +277,7 @@ def seg_overlapping_char(character, l_base_lines, l_boundary_lines, code):
 
 		empty_image = empty_image[0:rows, left:right]
 
-		#print len(horizontal_groups)
+		
 
 		if len(horizontal_groups) > 1:
 			character = seg_single_char(empty_image, l_base_lines, l_boundary_lines, "overlapping_characters", code+'_'+str(k))
@@ -360,6 +370,8 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 
 	#cv2.imwrite(t_path+'__.jpg', character_clr)
 
+	cv2.imwrite(t_path+'_.jpg', character_clr)
+
 	segment_points = []
 
 	points_three = []
@@ -374,12 +386,15 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 
 	if len(points) > 1:
 
-		#consider 3 points
-		for p1, p2, p3 in itertools.combinations(enumerate(points), 3): 
-			if abs(p1[1][1] - p2[1][1]) < 12:
-				if abs(p2[1][1] - p3[1][1]) < 12:
-					if abs(p1[1][0] - p2[1][0]) < 20:
-						if abs(p2[1][0] - p3[1][0]) < 20:
+		#consider 3 points x y
+		for p1, p2, p3 in itertools.combinations(enumerate(points), 3): 	
+			# print "XXXXXX"
+			# print p1
+			if abs(p1[1][1] - p2[1][1]) < 12 and abs(p1[1][1] - p2[1][1]) > 0:
+				if abs(p2[1][1] - p3[1][1]) < 12 and abs(p2[1][1] - p3[1][1]) > 0:
+					if abs(p1[1][0] - p2[1][0]) < 20 and abs(p1[1][0] - p2[1][0]) > 0:
+						if abs(p2[1][0] - p3[1][0]) < 20 and abs(p2[1][0] - p3[1][0]) > 0:
+
 							points_three.append(list(p2[1]))
 							remove_indices = [p1[0], p2[0], p3[0]]
 							points = [i for j, i in enumerate(points) if j not in remove_indices]
@@ -409,8 +424,10 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 			remove_indices = []
 			for p1, p2 in itertools.combinations(enumerate(points), 2): 
 				if p1[0] not in remove_indices and p2[0] not in remove_indices:
-												
-					if abs(p1[1][1] - p2[1][1]) > character_base_height*0.5 and abs(p1[1][1] - p2[1][1]) < character_base_height and abs(p1[1][0] - p2[1][0]) < 10:
+					
+					
+					if abs(p1[1][1] - p2[1][1]) > character_base_height*0.4 and abs(p1[1][1] - p2[1][1]) < character_base_height*1.2 and abs(p1[1][0] - p2[1][0]) < 10:
+						#print "c"							
 						h_points = [list(p1[1]), list(p2[1])]
 						h_points = list(reversed(sorted(h_points, key=lambda x: float(x[1]), reverse=True)))
 						points_vertical.append(h_points)  
@@ -447,6 +464,8 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 
 	#consider 3 points
 	for p in points_three:  
+		print "points_three_"
+		print p
 		if character_[p[1]-1][p[0]] != 0:			
 			continue
 
@@ -461,6 +480,9 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 			if character_[p[1]][x] > 0:        
 				white_pixels.append(x)
 
+		if len(white_pixels) == 0:
+			continue
+			
 		segment_points.append(white_pixels[-1])
 
 		cv2.line(character_clr_,(white_pixels[-1],0),(white_pixels[-1],rows),[0,0,255],2)
@@ -469,7 +491,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	
 	#consider closely aligned points
 	for p1, p2 in points_close:
-		
+		print "points_close_"
 
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
@@ -487,20 +509,21 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
  
 	#consider vertically aligned points	
 	for p1, p2 in points_vertical:  
-		
+		print "points_vertical_"
 
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
 
-		if p1[1] < l_base_lines[0]*0.8 or p2[1] > l_base_lines[1]*1.2:			
+		if p1[1] < l_base_lines[0]*0.7 or p2[1] > l_base_lines[1]*1.2:			
 			continue
-
-		for point_ in points:
-			if point_[0] > p1[0]*1.2:
-				break
-			else:
-				continue
-		continue
+		
+		# print "points_vertical__"
+		# for point_ in points:
+		# 	if point_[0] > p1[0]*1.2:
+		# 		break
+		# 	else:
+		# 		continue
+		# continue
 
 		print "points_vertical"
 		cv2.line(character_clr,(p_col,0),(p_col,rows),[0,0,255],2)
@@ -512,7 +535,17 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 			if character__[p_row][x] > 0:
 				white_pixels.append(x)
 		
+		if len(white_pixels) == 0:
+			continue
+
+
 		segment_points.append(white_pixels[-1])
+		
+
+		
+		
+
+		
 
 		cv2.line(character_clr_,(white_pixels[-1],0),(white_pixels[-1],rows),[0,0,255],2)
 		cv2.imwrite(t_path+'_.jpg', character_clr_)
@@ -520,6 +553,8 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	
 	#consider L shape points
 	for p1, p2 in points_l_shape: 
+		print "points_l_shape_"
+
 		p_row = (p1[1]+p2[1])/2
 		p_col = (p1[0]+p2[0])/2
 
@@ -546,7 +581,7 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 	segment_points.sort();
 	left_margin = 0
 	for char_no, segment_point in enumerate(segment_points):		
-		if segment_point - left_margin < 5:
+		if segment_point - left_margin < 10:
 			continue
 		seg_character = character[0:rows, left_margin:segment_point]
 		left_margin = segment_point
@@ -557,13 +592,13 @@ def seg_touching_char(character, l_base_lines, l_boundary_lines, code):
 
 	
 
-	sub_plots4["0"].imshow(character_clr_)
+	#sub_plots4["0"].imshow(character_clr_)
 
 	#cv2.imwrite(package_directory+'/touching_characters/'+code+'.jpg', character_clr_)
 	#fig4.savefig(package_directory+'/figures/touching'+code+'.png')
 	
-	sub_plots4["0"].clear()
-	sub_plots4["1"].clear()
+	#sub_plots4["0"].clear()
+	#sub_plots4["1"].clear()
 
 	return resized_characters  
 	#sub_plots4["2"].clear()

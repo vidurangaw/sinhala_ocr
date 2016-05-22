@@ -24,7 +24,7 @@ def correct(input_text):
 
     print input_text
 
-    input_text = input_text.decode("utf-8")
+    #input_text = input_text.decode("utf-8")
 
     input_text=input_text.replace(',',' ').replace('.',' ').replace('?',' ').replace('!',' ')
     # for test in text:
