@@ -106,6 +106,92 @@ def classify(img):
         # print char+"   "+lower+"  "+middle+"  "+upper
         return predicted_char
 
+def join_modifiers(edit_text_):
+    #edit_text = edit_text.decode("utf-8")
+    edit_text = list(edit_text_.decode("utf-8"))
+    join_dictionary = {u'\u0dd9'u'\u0dd9' : u'\u0ddb',  u'\u0dd9'u'\u0dca' : u'\u0dda', u'\u0dd9'u'\u0dcf' : u'\u0ddc', u'\u0dd9'u'\u0dca'u'\u0dcf' : u'\u0ddd',    u'\u0dd9'u'\u0dcf'u'\u0dca' : u'\u0ddd',
+                   u'\u0dd9'u'\u0ddf' : u'\u0dde',  u'\u0dd9'u'\u0df3' : u'\u0dde', u'\u0dd8'u'\u0dd8' : u'\u0df2', }
+
+    modifier_list = [u'\u0dca', u'\u0dcf', u'\u0df2', u'\u0df3', u'\u0dd0', u'\u0dd1', u'\u0dd2', u'\u0dd3', u'\u0dd4', u'\u0dd5', u'\u0dd6', u'\u0dd7', u'\u0dd8', u'\u0dd9', u'\u0dda', u'\u0ddb', u'\u0ddc', u'\u0ddd',
+                     u'\u0dde', u'\u0ddf', u'\u0d82', u'\u0d83']
+
+    left_modifiers = []
+    right_modifiers = []
+
+    punctuation_list = [u'.', u' ', u'?', u',', u'!']
+
+    new_list = []
+    temp = ''
+    print len(edit_text)
+    for i in range(len(edit_text)):
+        if (edit_text[i] == " ") or (edit_text[i] == ".") or (edit_text[i] == ",") or (edit_text[i] == "?") or (edit_text[i] == "!"):
+            if (temp != ''):
+                try:
+                    new_list.append(join_dictionary[temp])
+                except KeyError:
+                    new_list.append(temp)
+                temp = ''
+            new_list.append(edit_text[i])
+        elif (i==0):
+            if (edit_text[i] in modifier_list):
+                temp = edit_text[i]
+            else:
+                new_list.append(edit_text[i])
+        elif (i==len(edit_text)-1):
+            if (edit_text[i] not in modifier_list):
+                new_list.append(edit_text[i])
+                if (temp != ''):
+                    try:
+                        new_list.append(join_dictionary[temp])
+                    except KeyError:
+                        new_list.append(temp)
+                    temp = ''
+            else:
+                if (temp != ''):
+                    temp = temp + edit_text[i]
+                    try:
+                        new_list.append(join_dictionary[temp])
+                    except KeyError:
+                        new_list.append(temp)
+                    temp = ''
+                else:
+                    new_list.append(edit_text[i])
+        elif (edit_text[i] == u'\u0dca') and (i>1) and (edit_text[i-1] not in modifier_list) and (edit_text[i-1] not in punctuation_list) and (edit_text[i-2] in punctuation_list):
+            new_list.append(u'\u0dd3')
+        elif (edit_text[i] == u'\u0dd9'):
+            if (temp != ''):
+                try:
+                    new_list.append(join_dictionary[temp])
+                except KeyError:
+                    new_list.append(temp)
+            temp = edit_text[i]
+        elif (edit_text[i] in modifier_list):
+            if (edit_text[i-1] in modifier_list) or (edit_text[i-1]  in punctuation_list):
+                temp = temp + edit_text[i]
+            else:
+                if (temp!=''):
+                    temp = temp + edit_text[i]
+                    try:
+                        new_list.append(join_dictionary[temp])
+                    except KeyError:
+                        new_list.append(temp)
+                    temp = ''
+                else:
+                    new_list.append(edit_text[i])
+        else:
+            new_list.append(edit_text[i])
+            if (edit_text[i+1] not in modifier_list) or (edit_text[i+1]== u'\u0dd9'):
+                if (temp != ''):
+                    try:
+                        new_list.append(join_dictionary[temp])
+                    except KeyError:
+                        new_list.append(temp)
+                    temp = ''
+
+    #print new_list
+    output_string = '%s' % ''.join([''.join('%s' % ' '.join(e) for e in new_list)])
+    return output_string
+
 def classify_image(url):
     img = cv2.imread(url)
     img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)

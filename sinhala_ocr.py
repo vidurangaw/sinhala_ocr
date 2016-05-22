@@ -13,36 +13,43 @@ def run(image_path):
 	preprocess_image_path = image_path_+'_bw.jpg'
 	audio_path = image_path_+'.wav'
 
-	# image = cv2.imread(image_path)
+	image = cv2.imread(image_path)
 
-	# image_bw = segmenter.preprocess(image)
+	image_bw = segmenter.preprocess(image)
 
-	# cv2.imwrite(preprocess_image_path, image_bw) 
+	cv2.imwrite(preprocess_image_path, image_bw) 
 
-	# lines = segmenter.segment_lines(image_bw)
+	lines = segmenter.segment_lines(image_bw)
 
-	classified_text = "රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටියරී වර පසින් ඇහ් අ"
+	#classified_text = "රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටියරී වර පසින් ඇහ් අ"
+	classified_text = ""
 
-	# for i, line in enumerate(lines[2:3]):
-	# 	character_images = segmenter.segment_line(line, i)
-	# 	for character_image in character_images:			
-	# 		classified_text += classifier.classify(character_image)
-	# 		#classified_text += "2"				
+	for i, line in enumerate(lines):
+		character_images = segmenter.segment_line(line, i)
+		for character_image in character_images:			
+			classified_text += classifier.classify(character_image)
+			#classified_text += "2"				
 
+	#classified_text = "රජගහා විහාරෆ හඤූතර තරඔක් කදූභැටියරී වර පසින් ඇහ්"
 
 	# remove extra spaces
+	
+
+
+	#classified_text = ""
 	classified_text = classified_text.strip()
 	classified_text = " ".join(classified_text.split())
 
+	#join modifiers
+	classified_text = classifier.join_modifiers(classified_text)
+
+	print classified_text
 	
 	corrected_words = corrector.correct(classified_text)
 
-	#print corrected_words
-
 	corrected_text = ""
 
-
-	for words in corrected_words:
+	for words in corrected_words:			
 			corrected_text += words[0].encode("utf-8") + " " 
 
 	print corrected_text

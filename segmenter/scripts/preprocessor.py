@@ -1,9 +1,11 @@
-# import cv2
+import cv2
 import numpy as np
 import math
 import os
 import time
 import glob
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
 
 package_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,26 +29,30 @@ def preprocess(image):
   delete_images('final_characters')
 
   
+  
 
   gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY) 
 
+  rows,cols = gray.shape
   #cv2.imwrite(package_directory+'/figures/grey.jpg',gray)
   #clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(2,2))
   #gray_equalized = clahe.apply(gray)
     
-  gray_smoothed = cv2.fastNlMeansDenoising(gray,None,5,7,11)
-
-  #cv2.imwrite(package_directory+'/figures/smooth.jpg',gray_smoothed)
-  #gray_smoothed = cv2.GaussianBlur(gray_equalized,(3,3),0)
-  #gray_smoothed = cv2.medianBlur(gray_smoothed,3)
-  #gray_smoothed = gray_equalized
-  #ret3,bw = cv2.threshold(gray_smoothed,170,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-
-  #print ret3
-  bw = cv2.threshold(gray_smoothed, 150, 255, cv2.THRESH_BINARY_INV)[1]
+  gray_smoothed = cv2.fastNlMeansDenoising(gray,None,5,7,21)
 
 
-  #bw = cv2.adaptiveThreshold(gray_smoothed,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,55,2)
+
+  intencities = [0]*256
+  for i in xrange(rows):
+    for j in xrange(cols):
+      pixel = gray_smoothed.item(i, j)
+      intencities[pixel] += 1
+
+
+
+  ret3,bw = cv2.threshold(gray_smoothed,127,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+ 
+  #bw = cv2.threshold(gray_smoothed, 130, 255, cv2.THRESH_BINARY_INV)[1]
 
 
   cv2.imwrite(package_directory+'/figures/pre-thesh.jpg',bw)
@@ -54,14 +60,15 @@ def preprocess(image):
   bw_clr = cv2.cvtColor(bw,cv2.COLOR_GRAY2RGB)
 
 
-  rows,cols = bw.shape
+  
 
-  print cols
+  
+  #print cols
   #print 
   #### ---Fix skew angle--- #####
 
   #edges = cv2.Canny(gray_smoothed, 50, 150, apertureSize = 3)
-  lines = cv2.HoughLinesP(bw, 2, np.pi/180, 200, minLineLength = int(cols*0.2), maxLineGap = 120)[0]
+  lines = cv2.HoughLinesP(bw, 2, np.pi/180, 200, minLineLength = int(cols*0.2), maxLineGap = 180)[0]
   no_of_lines = len(lines)
 
   angles = np.empty([0])
@@ -84,6 +91,19 @@ def preprocess(image):
       angle_ = 90 - angle_
     angles = np.append(angles, angle_)
 
+
+  x = np.array(intencities, dtype=np.float)
+
+  gradients = np.gradient(x, 10)
+
+  #print intencities
+  plt.clf()
+  plt.plot(intencities)
+  plt.plot(gradients)
+  plt.xticks(np.arange(0, 255, 20))
+  plt.savefig(package_directory+'/figures/test.png')
+
+  #plt.show()
   #remove outliers from a angle list
   angles = angles[abs(angles - np.mean(angles)) < 2 * np.std(angles)]
   if angles.size > 0:
